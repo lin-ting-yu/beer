@@ -1,0 +1,40 @@
+$layout-max-width-1: 1000px;
+
+// size
+$screen-pc-size: 1440px;
+$screen-pad-l-size: 1060px;
+$screen-pad-m-size: 992px;
+$screen-pad-s-size: 768px;
+$screen-mobile-size: 480px;
+$screen-mobile-s-size: 359px;
+
+
+$header-pc-height-1:     90px;
+$header-pc-height-2:     60px;
+$header-mobile-height-1: 40px;
+
+// @mixin
+@mixin can-change(){
+	&:before{
+      display: block;
+      content: '';
+      width: 0;
+      height: 100%;
+      opacity: 0.9;
+      background-color: #eee;
+      position: absolute;
+      top: 0;
+      left: 0;
+    }
+}
+
+
+
+
+
+
+
+
+
+
+

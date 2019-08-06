@@ -1,0 +1,36 @@
+
+
+$padding-pc-size: $screen-pc-size;
+$padding-pad-l-size: $screen-pad-l-size;
+$padding-pad-m-size: $screen-pad-m-size;
+$padding-pad-s-size: $screen-pad-s-size;
+$padding-mobile-size: $screen-mobile-size;
+$padding-mobile-s-size: $screen-mobile-s-size;
+
+
+$padding-window-name: pc,pad-l,pad-m,pad-s,m,s-m;
+$padding-window-size:$padding-pc-size,$padding-pad-l-size,$padding-pad-m-size,$padding-pad-s-size,$padding-mobile-size,$padding-mobile-s-size;
+
+
+
+@for $i from 1 to length($padding-window-name)+1{
+		
+	@if($i > 1){
+		@media screen and (max-width: nth($padding-window-size,$i)){
+			@for $j from 0 to 21 {
+			    .mt-#{nth($padding-window-name,$i)}-#{$j*5}{
+			    	margin-top: $j*5px;
+			    }
+			}
+		}
+	}
+	@else{
+	    @for $j from 0 to 21 {
+		    .mt-#{nth($padding-window-name,$i)}-#{$j*5}{
+		    	margin-top: $j*5px;
+		    }
+		}
+	}
+	
+}
+	

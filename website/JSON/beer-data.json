@@ -1,0 +1,179 @@
+[
+  { "name": "cola",
+    "objUrl":"./obj/Corona/GlassBottle5.obj",
+    "loadedMesh": null,
+    "transparent": true,
+    "children": {
+      "bottle": {
+        "material": "glassMaterial",
+        "maps": {
+          "map": "./obj/Corona/bottle.png"
+        }
+      },
+      "cover": {
+        "material": "coverAndLogo",
+        "maps": {
+          "map": "./obj/Corona/BotellaText.jpg"
+        }
+      },
+      "logo": {
+        "material": "coverAndLogo",
+        "maps": {
+          "map": "./obj/Corona/BotellaText.jpg"
+        }
+      }
+    },
+    "foodImage": "../img/food-01.png",
+    "content":{
+      "section_1":{
+        "title": "比利時啤酒",
+        "subtitle": "水果與啤酒的樂章",
+        "text": "清爽的甜味水果將您的味蕾傳遞到熱帶目的地，無論外面的天氣如何"
+      },
+      "section_2":{
+        "title": "比利時啤酒",
+        "subtitle": "beertype",
+        "percen": 5.5,
+        "text": "多汁的跳躍炸彈，讓我們想起了我們的Taproom之家。清爽的甜味水果將您的味蕾傳遞到熱帶目的地，無論外面的天氣如何，啤酒都準備好啜飲。",
+        "list":[
+          { "title1": "REGION",
+            "text1": "Mexico"},
+          { "title2": "Tasting",
+            "text2": "Mango, Papaya, Candied Peach"},
+          { "title3": "Wheat",
+            "number3": 2.5},
+          { "title4": "Hops",
+            "number4": 4}
+        ]
+      },
+      "section_3":{
+        "title": "PAIRINGS",
+        "text": "The model is in the root directory of the project. I'm, so it isn't the CORS problem.",
+        "list":[
+          { "title1": "Food",
+            "text1": "Spicy Noodle Dishes, grilled fish, curry"},
+          { "title2": "Glassware",
+            "text2": "Tulip"}
+        ]
+      }
+    }
+  },
+  { "name": "cola",
+    "objUrl":"./obj/Corona/GlassBottle5.obj",
+    "loadedMesh": null,
+    "transparent": true,
+    "children": {
+      "bottle": {
+        "material": "glassMaterial",
+        "maps": {
+          "map": "./obj/Corona/bottle.jpg"
+        }
+      },
+      "cover": {
+        "material": "coverAndLogo",
+        "maps": {
+          "map": "./obj/Corona/BotellaText.jpg"
+        }
+      },
+      "logo": {
+        "material": "coverAndLogo",
+        "maps": {
+          "map": "./obj/Corona/BotellaText.jpg"
+        }
+      }
+    },
+    "foodImage": "../img/food-02.png",
+    "content":{
+      "section_1":{
+        "title": "TAIWAN BEER",
+        "subtitle": "The console does not report any errors. but callback",
+        "text": "The model is in the root directory of the project. I'm, so it isn't the CORS problem."
+      },
+      "section_2":{
+        "title": "TAIWAN BEER",
+        "subtitle": "beertype",
+        "percen": 15.5,
+        "text": "The model is in the root directory of the project. I'm, so it isn't the CORS problem. The model is in the root directory of the project. I'm, so it isn't the CORS problem.",
+        "list":[
+          { "title1": "Region",
+            "text1": "2Mexico"},
+          { "title2": "Tasting",
+            "text2": "2Mango, Papaya, Candied Peach"},
+          { "title3": "Wheat",
+            "number3": 3.5},
+          { "title4": "Hops",
+            "number4": 5}
+        ]
+      },
+      "section_3":{
+        "title": "PAIRINGS",
+        "text": "The model is in the root directory of the project. I'm, so it isn't the CORS problem.",
+        "list":[
+          { "title1": "Food",
+            "text1": "Spicy Noodle Dishes, grilled fish, curry"},
+          { "title2": "Glassware",
+            "text2": "Tulip"}
+        ]
+      }
+    }
+  },
+  { "name": "cola",
+    "objUrl":"./obj/Corona/GlassBottle5.obj",
+    "loadedMesh": null,
+    "transparent": true,
+    "children": {
+      "bottle": {
+        "material": "glassMaterial",
+        "maps": {
+          "map": "./obj/Corona/bottle.jpg"
+        }
+      },
+      "cover": {
+        "material": "coverAndLogo",
+        "maps": {
+          "map": "./obj/Corona/BotellaText.jpg"
+        }
+      },
+      "logo": {
+        "material": "coverAndLogo",
+        "maps": {
+          "map": "./obj/Corona/BotellaText.jpg"
+        }
+      }
+    },
+    "foodImage": "../img/food-03.png",
+    "content":{
+      "section_1":{
+        "title": "TAIWAN BEER333",
+        "subtitle": "The console does not report any errors. but callback",
+        "text": "The model is in the root directory of the project. I'm, so it isn't the CORS problem."
+      },
+      "section_2":{
+        "title": "比利時啤酒3",
+        "subtitle": "beertype",
+        "percen": 4.5,
+        "text": "2多汁的跳躍炸彈，讓我們想起了我們的Taproom之家。清爽的甜味水果將您的味蕾傳遞到熱帶目的地，無論外面的天氣如何，啤酒都準備好啜飲。",
+        "list":[
+          { "title1": "REGION",
+            "text1": "3Mexico"},
+          { "title2": "Tasting",
+            "text2": "3Mango, Papaya, Candied Peach"},
+          { "title3": "Wheat",
+            "number3": 4.5},
+          { "title4": "Hops",
+            "number4": 3}
+        ]
+      },
+      "section_3":{
+        "title": "PAIRINGS",
+        "text": "The model is in the root directory of the project. I'm, so it isn't the CORS problem.",
+        "list":[
+          { "title1": "Food",
+            "text1": "Spicy Noodle Dishes, grilled fish, curry"},
+          { "title2": "Glassware",
+            "text2": "Tulip"}
+        ]
+      }
+    }
+  }
+]

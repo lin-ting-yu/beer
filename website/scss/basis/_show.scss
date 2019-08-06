@@ -1,0 +1,29 @@
+$show-pc-size: $screen-pc-size;
+$show-pad-l-size: $screen-pad-l-size;
+$show-pad-m-size: $screen-pad-m-size;
+$show-pad-s-size: $screen-pad-s-size;
+$show-mobile-size: $screen-mobile-size;
+$show-mobile-s-size: $screen-mobile-s-size;
+
+$show-window-name: pc,pad-l,pad-m,pad-s,m,s-m;
+$show-window-size:$show-pc-size,$show-pad-l-size,$show-pad-m-size,$show-pad-s-size,$show-mobile-size,$show-mobile-s-size;
+
+
+@for $i from 1 to length($show-window-name)+1{
+	$key-nome: nth($show-window-name, $i);
+	$show-name: show-;
+	@if($i != 1){
+		@media screen and (min-width: nth($show-window-size,$i) + 1){
+		    .#{$show-name}#{$key-nome}{
+		    	display: none !important;
+		    }
+		    .pos-#{$show-name}#{$key-nome}{
+		    	height: 0;
+		    	width: 0;
+		    	overflow: hidden;
+		    	opacity: 0;
+		    	position: fixed;
+		    }
+		}
+	}	
+}

@@ -1,0 +1,62 @@
+@charset "UTF-8";
+* {
+  color: #000000;
+  font-family: 'Work Sans', sans-serif , '微軟正黑體';
+  word-break: break-word;
+  padding: 0;
+  margin: 0;
+  -webkit-box-sizing: border-box;
+  box-sizing: border-box; }
+
+.html-fixed {
+  position: fixed;
+  width: 100vw;
+  height: 100vh;
+  left: 0;
+  top: 0; }
+
+#stats {
+  position: absolute; }
+
+body {
+  overflow: hidden;
+  line-height: 0;
+  font-size: 0; }
+
+input:focus,
+select:focus,
+button:focus,
+span:focus {
+  outline: none !important;
+  -webkit-box-shadow: none;
+  box-shadow: none; }
+
+[class^="beer-comp-"] * {
+  -webkit-box-sizing: border-box;
+  box-sizing: border-box;
+  font-size: 16px;
+  -webkit-text-size-adjust: 100%;
+  -ms-text-size-adjust: 100%;
+  padding: 0;
+  margin: 0;
+  border: 0;
+  list-style: none; }
+
+[class^="beer-comp-"] p,
+[class^="beer-comp-"] a,
+[class^="beer-comp-"] span {
+  color: inherit;
+  font-weight: inherit;
+  line-height: inherit;
+  margin: 0;
+  padding: 0;
+  font-size: inherit;
+  line-height: 1.4em; }
+
+[class^="beer-comp-"] button:focus {
+  outline: 0;
+  -webkit-box-shadow: none;
+  box-shadow: none; }
+
+[class^="beer-comp-"] a:hover {
+  text-decoration: none; }

@@ -1,0 +1,109 @@
+[
+  { "name": "cola",
+    "objUrl":"./obj/Corona/GlassBottle4.obj",
+    "loadedMesh": null,
+    "transparent": true,
+    "children": {
+      "bottle": {
+        "material": "glassMaterial",
+        "maps": {
+          "map": "./obj/Corona/bottle.jpg",
+        }
+      },
+      "cover": {
+        "material": "coverAndLogo",
+        "maps": {
+          "map": "./obj/Corona/BotellaText.jpg",
+        }
+      },
+      "logo": {
+        "material": "coverAndLogo",
+        "maps": {
+          "map": "./obj/Corona/BotellaText.jpg",
+        }
+      }
+    },
+    "content":{
+      "section_1":{
+        "title": "比利時啤酒",
+        "subtitle": "水果與啤酒的樂章",
+        "text": "清爽的甜味水果將您的味蕾傳遞到熱帶目的地，無論外面的天氣如何"
+      },
+      "section_2":{
+        "title": "比利時啤酒",
+        "text": "多汁的跳躍炸彈，讓我們想起了我們的Taproom之家。清爽的甜味水果將您的味蕾傳遞到熱帶目的地，無論外面的天氣如何，啤酒都準備好啜飲。",
+        "list":[
+          { "title": "產地",
+            "text": "密蘇里州，美國"},
+          { "title": "風味",
+            "text": "芒果，木瓜，蜜餞桃"},
+          { "title": "麥芽香",
+            "number": 2.5},
+          { "title": "啤酒花",
+            "number": 4}
+        ]
+      },
+      "section_3":{
+        "title": "組合",
+        "text": "清爽的甜味水果將您的味蕾傳遞到熱帶目的地。",
+        "list":[
+          { "title": "搭配",
+            "text": "辣麵條，烤魚，咖哩"},
+          { "title": "酒杯",
+            "text": "鬱金香"}
+        ]
+      }
+      
+    }
+  },
+  { "name": "cola",
+    "objUrl":"./obj/Corona/GlassBottle4.obj",
+    "loadedMesh": null,
+    "transparent": true,
+    "children": {
+      "bottle": {
+        "material": "glassMaterial",
+        "maps": {
+          "map": "./obj/Corona/bottle.jpg",
+        }
+      },
+      "cover": {
+        "material": "coverAndLogo",
+        "maps": {
+          "map": "./obj/Corona/BotellaText.jpg",
+        }
+      },
+      "logo": {
+        "material": "coverAndLogo",
+        "maps": {
+          "map": "./obj/Corona/BotellaText.jpg",
+        }
+      }
+    }
+  },
+  { "name": "cola",
+    "objUrl":"./obj/Corona/GlassBottle4.obj",
+    "loadedMesh": null,
+    "transparent": true,
+    "children": {
+      "bottle": {
+        "material": "glassMaterial",
+        "maps": {
+          "map": "./obj/Corona/bottle.jpg",
+        }
+      },
+      "cover": {
+        "material": "coverAndLogo",
+        "maps": {
+          "map": "./obj/Corona/BotellaText.jpg",
+        }
+      },
+      "logo": {
+        "material": "coverAndLogo",
+        "maps": {
+          "map": "./obj/Corona/BotellaText.jpg",
+        }
+      }
+    }
+  }
+]
