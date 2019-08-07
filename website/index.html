@@ -57,12 +57,12 @@
                     <div class="header-list">
                         <ul class="header-ul">
                             <li class="header-li">
-                                <a href="" class="link-content">
+                                <a href="" class="link-content" data-toggle="modal" data-target="#popup-copyright">
                                     <span class="text">COPYRIGHT</span>
                                 </a>
                             </li>
                             <li class="header-li">
-                                <a href="" class="link-content">
+                                <a href="" class="link-content" data-toggle="modal" data-target="#popup-contact">
                                     <span class="text">CONTACT</span>
                                 </a>
                             </li>
@@ -206,13 +206,17 @@
                 </div>
             </div>
         </div>
-        <script type="text/javascript">
-            w3IncludeHTML(function(){
-                //當天、地、左選單都include進來後呼叫
-                ajaxEvent();
-            });
-        </script>
-    </div>
     
+    </div>
+    <div class="modal-content">
+        <div class="beer-comp-modal" w3-include-html="include/include-copyright-popup.html"></div>
+        <div class="beer-comp-modal" w3-include-html="include/include-contact-popup.html"></div>
+    </div>
+    <script type="text/javascript">
+        w3IncludeHTML(function(){
+            //當天、地、左選單都include進來後呼叫
+            ajaxEvent();
+        });
+    </script>
 </body>
 </html> 

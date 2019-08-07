@@ -1,0 +1,244 @@
+$form-col-length: 12;
+
+
+$form-pc-size: $screen-pc-size;
+$form-pad-l-size: $screen-pad-l-size;
+$form-pad-m-size: $screen-pad-m-size;
+$form-pad-s-size: $screen-pad-s-size;
+$form-mobile-size: $screen-mobile-size;
+$form-mobile-s-size: $screen-mobile-s-size;
+
+
+$form-window-name: pc,pad-l,pad-m,pad-s,m,s-m;
+$form-window-size:$form-pc-size,$form-pad-l-size,$form-pad-m-size,$form-pad-s-size,$form-mobile-size,$form-mobile-s-size;
+
+
+
+$form-col-col-gap: 20px;
+$form-group-col-gap: 50px;
+$form-col-bottom-gap: 40px;
+
+
+//=======基礎設定=======//
+	[class*="beer-form-content"]{
+		position: relative;
+		// overflow: hidden;
+		margin-bottom: $form-col-bottom-gap * -1;
+		.beer-form-body{
+			width: calc(100% + #{$form-col-col-gap});
+			margin-left: $form-col-col-gap / -2;
+		}
+		.beer-form-group-row{
+			display: flex;
+			flex-wrap: wrap;
+			width: calc(100% + #{$form-group-col-gap - $form-col-col-gap});
+			margin-left: ($form-group-col-gap - $form-col-col-gap) / -2;
+		}
+		.beer-form-group{
+			width: 100%;
+			padding-left: ($form-group-col-gap - $form-col-col-gap)/2;
+			padding-right: ($form-group-col-gap - $form-col-col-gap)/2;
+
+			&+.beer-form-group{
+				@media screen and (max-width: $form-pad-s-size){
+					margin-top: 10px;
+				}
+			}
+			&.important{
+				.beer-form-title:before{
+					display: black;
+					content:'*';
+					font-size: 16px;
+					font-weight: normal;
+					font-style: normal;
+					font-stretch: normal;
+					line-height: normal;
+					letter-spacing: 0.7px;
+					text-align: right;
+					color: #d70c18;
+					position: absolute;
+					left: 0;
+					top: 0;
+				}
+			}
+			.beer-form-title{
+				padding: 0px $form-col-col-gap / 2;	
+				position: relative;
+				margin-bottom: 15px;
+			}
+			.beer-form-row{
+				display: flex;
+				flex-wrap: wrap;
+				&.col-center{
+					align-items: center;
+				}
+				.beer-form-col{
+					flex: 1;
+					padding: 0px $form-col-col-gap / 2;
+					padding-bottom: $form-col-bottom-gap;
+					&.gap-text{
+						position: relative;
+						.gap-text-content{
+							position: absolute;
+							top: 50%;
+							left: 0;
+							transform: translate(-50% , -100%);
+							.text{
+								width: 1em;
+								font-size: 24px;
+								font-weight: bold;
+								font-style: normal;
+								font-stretch: normal;
+								line-height: 1em;
+								letter-spacing: 0px;
+								color: #000000;
+								@media screen and (max-width: $form-pad-s-size){
+									font-size: 18px;
+								}
+							}
+						}
+					}
+				}
+
+			}
+			.beer-form-group{
+				margin-top: 30px;
+				@media screen and (min-width: $form-pad-s-size +1){
+					padding-left: ($form-group-col-gap - $form-col-col-gap);
+					padding-right: 0;
+				}
+				@media screen and (max-width: $form-pad-s-size){
+					margin-top: 10px;
+				}
+			}
+		}
+
+		@for $i from 1 to length($form-window-name)+1{
+			$key-nome: nth($form-window-name, $i);
+			$form-col-name: col-;
+				
+			@if($i > 1){
+				@media screen and (max-width: nth($form-window-size,$i)){
+					@for $j from 1 to $form-col-length+1 {
+					    .#{$form-col-name}#{$key-nome}-#{$j}{
+					    	min-width: 100% * ($j / $form-col-length);
+					    	max-width: 100% * ($j / $form-col-length);
+					    }
+					}
+				}
+			}
+			@else{
+				@for $j from 1 to $form-col-length+1 {
+				    .#{$form-col-name}#{$key-nome}-#{$j}{
+				    	min-width: 100% * ($j / $form-col-length);
+				    	max-width: 100% * ($j / $form-col-length);
+				    }
+				}
+			}
+			
+		}
+
+		.no-pl{
+			padding-left: 0;
+			.beer-form-title{
+				padding: 0px 0px;	
+			}
+		}
+
+		.radio-content{
+			.label.pa-special{
+				.beer-form-el-select{
+					margin-top: -10px; 
+					@media screen and(max-width:1024px){
+						margin-top: -5px; 
+					}
+				}
+				&::before{
+					margin-top: 6px; 
+					@media screen and(max-width:1024px){
+						margin-top: 10px; 
+					}
+				}
+				.radio-info{
+					padding: 0 10px;
+					.text{
+						line-height: 1.88;
+						@media screen and(max-width:1024px){
+							line-height: 2.5;
+						}
+					}
+				}
+			}
+		}
+	}
+//=======客製設定=======//
+	[class*="beer-form-content"]{
+		.beer-form-group-row{
+			&+.beer-form-group-row{
+				margin-top: 70px;
+				@media screen and (max-width: 1024px){
+					margin-top: 10px;
+				}
+			}
+		}
+		.beer-form-title{
+			.form-title-level-1{
+				.text{
+					font-size: 16px;
+					font-weight: normal;
+					font-style: normal;
+					font-stretch: normal;
+					line-height: normal;
+					letter-spacing: 0.7px;
+					color: #000;
+				}
+			}
+			&.title-has-btn{
+				position: relative;
+				padding-right: 110px;
+				@media screen and (max-width: $form-pad-s-size){
+					padding-right: 100px;
+				}
+				.title-btn-content{
+					width: 94px;
+					position: absolute;
+					top: -3px;
+					right: 10px;
+					@media screen and (max-width: $form-pad-s-size){
+						width: 85px;
+						top: -1px;
+					}
+					.btn{
+						@media screen and (max-width: $form-pad-s-size){
+							max-width: 85px;
+						}
+					}
+					.btn-link-content{
+						.text{
+							@include text-one();
+						}
+					}
+				}
+			}
+		}
+	}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

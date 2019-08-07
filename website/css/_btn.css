@@ -1,0 +1,14 @@
+.beer-comp-btn {
+  display: block;
+  width: 100%; }
+  .beer-comp-btn .btns-content {
+    display: -webkit-box;
+    display: -ms-flexbox;
+    display: flex; }
+    .beer-comp-btn .btns-content .btn-content {
+      -webkit-box-flex: 1;
+      -ms-flex: 1;
+      flex: 1;
+      text-align: center; }
+      .beer-comp-btn .btns-content .btn-content .link-content {
+        display: inline-block; }

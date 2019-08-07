@@ -11,7 +11,7 @@
 //===========   bindingEvent function     ===========//
 function ajaxEvent(){
     $.ajax({
-        url: '../JSON/beer-data.json',// url位置
+        url: './JSON/beer-data.json',// url位置
         type: 'get',                   // post/get
         dataType: "text",
         error: function (xhr) {
@@ -25,9 +25,13 @@ function ajaxEvent(){
 } 
 function bindingEvent(){
     var _initial = [$headerHandle,
+                    $modalHandle,
                     $threeHandle,
                     $sectionHandle,
-                    $drawIconHandle];
+                    $drawIconHandle,
+                    $inputHandle,
+                    $textareaHandle,
+                    $contactHandle];
     var _onResize    = [],
         _onScroll    = [],
         _onDraw      = [],
@@ -38,7 +42,6 @@ function bindingEvent(){
         _onWheel     = [];
     let _whellLength = 0,
         _whellFn = false;
-    const windowJquery = $(window);
     //判斷手機為body新增class
     if(isMobile){ $('body').addClass('isMobile'); }
 
@@ -187,6 +190,8 @@ function bindingEvent(){
 }
 
 //===========   bindingEvent function: end ===========//
+const windowJquery = $(window);
+
 var eventData = {
     isResize: false,
     isScroll: false,
@@ -197,9 +202,9 @@ var eventData = {
     isMouseUp: false,
     isMouseMove: false,
 };
-var $windowData = { width:     $(window).outerWidth(),
+var $windowData = { width:     windowJquery.outerWidth(),
                     inHeight:    window.innerHeight,
-                    scrollTop: $(window).scrollTop(),
+                    scrollTop: windowJquery.scrollTop(),
                     mouseX: 0,
                     mouseY: 0,
                     mouseDownPos:{x: null, y: null}
@@ -207,7 +212,7 @@ var $windowData = { width:     $(window).outerWidth(),
 var isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry/i.test(navigator.userAgent);
 let beer;
 
-console.log($windowData);
+
 const threeJsControlData = {
     mouseX: -30,
     mouseXPercen: 15 / $windowData.width,
@@ -277,6 +282,186 @@ materialObj.textureCube.mapping = THREE.CubeRefractionMapping;
 
 
 //===========
+const $contactHandle = {
+    key: '#popup-contact',
+    keyContent: null,
+    keyButton: null,
+    keyForm: null,
+    sandAnEasing: CteatrEasing(0.57,-0.59,0.95,-0.39),
+    isSand: false,
+    sandAn: function(){
+        return new TWEEN.Tween({y: 0, rotate: 0, scale: 1})
+                    .to({y: -1000, rotate: 150, scale: 0.6}, 1000)
+                    .easing(this.sandAnEasing)
+    },
+    _initChildDOM: function(){
+        this.Button = this.keyDom.find('.modal-footer .btn-content .link-content');
+        this.keyContent = this.keyDom.find('.modal-content');
+        this.keyForm = this.keyDom.find('form');
+    },
+    _initEvent: function(){
+        let self = this;
+        this.Button.on('click',function(e){
+            e.preventDefault();
+            self.submitAn();
+        });
+        this.keyDom.on('hidden.bs.modal',()=>{
+            this.submitAnReset();
+        });
+    },
+    submitAn: function(){
+        this.keyDom.addClass('contact-to-white');
+        this.keyContent.css('height', this.keyContent.height() + 'px');
+        this.isSand = true;
+        setTimeout(()=>{
+            if(!this.isSand) {return;}
+            this.keyDom.addClass('contact-to-mail');
+             setTimeout(()=>{
+                if(!this.isSand) {return;}
+                this.keyDom.addClass('contact-mail-close');
+                setTimeout(()=>{
+                    if(!this.isSand) {return;}
+                    this.keyDom.addClass('contact-sand');
+                    this.sandAn()
+                        .onUpdate((e)=>{
+                            if(!this.isSand) {return;}
+                            let transform = `translateY(${e.y}px) rotate(${e.rotate}deg) scale(${e.scale})`
+                            this.keyContent.css('transform', transform);
+                        })
+                        .start();
+                },500);
+             },700);
+        },800);
+    },
+    submitAnReset: function(){
+        if(this.isSand){
+            this.keyForm.get(0).reset();
+            this.keyContent.attr('style', '');
+            this.keyDom.removeClass('contact-to-white');
+            this.keyDom.removeClass('contact-to-mail');
+            this.keyDom.removeClass('contact-mail-close');
+            this.keyDom.removeClass('contact-sand');
+            this.isSand = false;
+        }
+    },
+    initial: function(){
+        this._initChildDOM();
+        this._initEvent();
+    }
+};
+const $inputHandle = {
+    key: '.beer-form-el-input',
+    keyFormDOM: null,
+    _initChildDOM: function(){
+        this.keyFormDOM = this.keyDom.find('input');
+    },
+    _initEvent: function(){
+        let self = this;
+        this.keyFormDOM.on('focus', function(){
+            $(this).parents(self.key).addClass('is-focus');
+        });
+        this.keyFormDOM.on('blur', function(){
+            let thisInput = $(this);
+            if(thisInput.val() === ''){
+                thisInput.parents(self.key).removeClass('is-focus');
+            }
+        });
+    },
+    checkAllVal: function(){
+        let self = this;
+        this.keyFormDOM.each(function(_, DOM){
+            let thisDOM = $(DOM)
+            if(thisDOM.val() !== ''){
+                thisDOM.parents(self.key).addClass('is-focus');
+            }
+        });
+    },
+    initial: function(){
+        this._initChildDOM();
+        this._initEvent();
+        this.checkAllVal();
+    }
+};
+const $textareaHandle = {
+    key: '.beer-form-el-textarea',
+    keyFormDOM: null,
+    _initChildDOM: function(){
+        this.keyFormDOM = this.keyDom.find('textarea');
+    },
+    _initEvent: function(){
+        $inputHandle._initEvent.call(this);
+        let self = this;
+        this.keyFormDOM.on('input', function(){
+            self._checkSize(this);
+        });
+    },
+    checkAllVal: function(){
+         $inputHandle.checkAllVal.call(this);
+    },
+    checkAllSize: function(target){
+        target = target? $(target).find('.beer-form-el-textarea textarea'): $textareaHandle.keyFormDOM;
+        target.each(function(_, DOM){
+            $textareaHandle._checkSize(DOM);
+        });
+    },
+    _checkSize: function(textarea){
+        let fnHeight = 120;
+        textarea.style.height = '120px';
+        fnHeight = textarea.scrollHeight > 120? textarea.scrollHeight:120
+        textarea.style.height = fnHeight + 'px';
+    },
+    initial: function(){
+        this._initChildDOM();
+        this._initEvent();
+        this.checkAllVal();
+        $modalHandle.addEventList('shown', this.checkAllSize);
+    }
+};
+const $modalHandle = {
+    key:'.modal',
+    isModalOpen: false,
+    eventsList:{
+        'show': [],
+        'shown': [],
+        'hide': [],
+        'hidden':[]
+    },
+    _initBindEvent: function(){
+        let self = this;
+        for(let events in this.eventsList){
+            this.keyDom.on(events + '.bs.modal', function(e){
+                self.eventsList[events].forEach(function(event){
+                    event(e.target);
+                });
+            });
+        }
+    },
+    _initDefaultEvent: function(){
+        this.addEventList('show', ()=>{
+            this.isModalOpen =  true;
+            $('body').addClass('content-blur');
+        });
+        this.addEventList('hidden', ()=>{
+            this.isModalOpen =  false;
+            $('body').removeClass('content-blur');
+        });
+    },
+    addEventList: function(name, event){
+        this.eventsList[name].push(event);
+    },
+    reomveEventList: function(name, event){
+        let thisEvents = this.eventsList[name]
+        let index = thisEvent.indexOf(event);
+        if(index > -1){
+            thisEvents.splice(index, 1);
+        }
+    },
+    initial: function(){
+        this._initBindEvent();
+        this._initDefaultEvent();
+    }
+
+};
 const $drawIconHandle = {
     key: '#draw-icon',
     keyUnderline: null,
@@ -307,6 +492,8 @@ const $drawIconHandle = {
     },
     setPos: function(){
         setInterval(()=>{
+            if($modalHandle.isModalOpen){ return }
+
             this.mousePos.x += (this.mousePos.nextX - this.mousePos.x) * 0.1;
             this.mousePos.y += (this.mousePos.nextY - this.mousePos.y) * 0.1;
             this.keyDom.css('left', (this.mousePos.x) + 'px');
@@ -323,6 +510,7 @@ const $drawIconHandle = {
         this.iconToUnderlineDOM = DOM;
     },
     setToUnderlindPos: function(){
+        if($modalHandle.isModalOpen){ return }
         this.stopMouseTrack();
         let thisPos = this.keyDom.get(0).getBoundingClientRect();
         let DOM = this.iconToUnderlineDOM;
@@ -358,16 +546,19 @@ const $drawIconHandle = {
         ****** Underlind code: end   ****/
     },
     removeUnderlindPos: function(){
-        this.iconToUnderlineDOM = null;
-        this.startMouseTrack();
-        this.keyDom.removeClass('hide-arraw hide-scroll');
+        if($modalHandle.isModalOpen){ return }
+        let self = this || $drawIconHandle;
+        self.iconToUnderlineDOM = null;
+        self.startMouseTrack();
+        self.keyDom.removeClass('hide-arraw hide-scroll');
 
         /*******to button: start*******/
-        this.keyCircle.css('width', '');
-        this.keyCircle.css('height', '');
-        this.keyCircle.css('border-radius', '');
+        self.keyCircle.css('width', '');
+        self.keyCircle.css('height', '');
+        self.keyCircle.css('border-radius', '');
         /*******to button: end*******/
 
+        // windowJquery.trigger('mousemove');
         /***** Underlind code: start
         this.keyDom.removeClass('is-underline');
         this.keyUnderline.css('width', '');
@@ -382,6 +573,8 @@ const $drawIconHandle = {
         /*******to button: start*******/
         this.keyCircle = this.keyDom.find('.draw-circle');;
         /*******to button: end*******/
+
+        $modalHandle.addEventList('hidden', this.removeUnderlindPos);
         /***** Underlind code: start
         this.keyUnderline = this.keyDom.find('.underline');
         ****** Underlind code: end   ****/
@@ -395,7 +588,7 @@ const $drawIconHandle = {
         //     this.setToUnderlindPos();
         // }
     }
-}
+};
 const $headerHandle = {
     key:'.beer-comp-header',
     keyNav: null,
@@ -726,6 +919,7 @@ const $sectionHandle = {
         }
     },
     onMouseDown: function(){
+        if($modalHandle.isModalOpen){ return }
         if(!this.itemMoving){
             this.itemChanged = false;
         }
@@ -757,6 +951,7 @@ const $sectionHandle = {
         this._changeItemAn(onNext);
     },
     onWheel: function(type){
+        if($modalHandle.isModalOpen){ return }
         let num = type === 'down'? 1 : -1;
         let next = this.sectionActive + num;
         if(next < 0 || next >= this.keyDom.length){
@@ -1108,6 +1303,23 @@ const $threeHandle = {
         }
         return chart;
     }
+    function CteatrEasing(x1, y1, x2, y2){
+        return function(t){
+            return bezier_point(t, [0,0], [x1, y1], [x2, y2], [1,1])[1];
+        }
+    }
+    function bezier_coordinate(t, n0, n1, n2, n3){
+        return  n0 * Math.pow((1 - t), 3) + 
+                3  * n1 * t * Math.pow((1 - t), 2) + 
+                3  * n2 * Math.pow(t, 2) * (1 - t) + 
+                n3 * Math.pow(t, 3);
+    }
+
+    function bezier_point(t, p0, p1, p2, p3){
+        return [bezier_coordinate(t, p0[0], p1[0], p2[0], p3[0]),
+                bezier_coordinate(t, p0[1], p1[1], p2[1], p3[1])];
+    }
+
 //=============== tool: end ===============//
 
 

@@ -1,0 +1,214 @@
+
+
+	body.content-blur{
+		.layout-content,.three-canvas{
+			filter: blur(20px);
+		}
+		.draw-icon{
+			opacity: 0;
+		}
+	}
+	.three-canvas,.layout-content{
+		transition: filter 0.5s;
+		// filter: blur(0);
+	}
+
+
+	.modal-backdrop{
+		background-color: #eee;
+	}
+
+//beer-comp-modal
+	.beer-comp-modal{
+		.modal{
+			transform-style: preserve-3d;
+			perspective: 500px;
+			// perspective-origin: 50% 50%;
+			
+			&::-webkit-scrollbar {
+			    display: none;
+			}
+			&.show{
+				.modal-dialog{
+					margin-top: 0;
+					transform: rotateY(0deg) rotateX(0deg);
+				}
+			}
+			.modal-dialog{
+				display: flex;
+				align-items: center;
+				margin: auto;
+				margin-top: 200px;
+				padding: 30px 0px;
+				transform-origin: 50% 50% 50%;
+				transform: rotateY(-15deg) rotateX(-20deg);
+				transition: transform 1.2s , margin-top 1s;
+			}
+			.modal-content{
+				box-shadow: 0 10px 30px -20px rgba(0,0,0,0.2);
+				border-radius: 10px;
+			}
+			.close{
+				.close-btn{
+					@include X-btn();
+				}
+				margin: 0;
+				padding: 0;
+				opacity: 0.5;
+				width: 20px;
+				height: 20px;
+				background-color: transparent;
+				border: none;
+				position: absolute;
+				top: 15px;
+				right: 15px;
+				transform-origin: 50% 50%;
+				transition: transform 0.3s;
+				&:hover{
+					opacity: 0.5;
+					transform: rotate(90deg);
+				}
+			}
+			.modal-header,.modal-body,.modal-footer{
+				padding: 20px;
+				position: relative;
+			}
+			.modal-header{
+				flex-wrap: wrap;
+				padding-top: 30px;
+				.modal-title{
+					text-align: center;
+					width: 100%;
+					display: block;
+					&.title{
+						font-size: 30px;
+					}
+					&.subtitle{
+						font-size: 16px;
+						color: #999;
+					}
+				}
+			}
+			.modal-body{
+				font-size: 10px;
+				line-height: 1em;
+				padding-bottom: 50px;
+			}
+			.modal-footer{
+				padding-bottom: 30px;
+			}
+		}
+	}
+
+//contact動畫
+	.beer-comp-modal{
+		.popup-contact{
+			.thanks-content{
+				position: absolute;
+				top: 50%;
+				left: 50%;
+				transform: translate(-50% , -50%);
+				opacity: 0;
+				transition: 1s;
+				text-align: center;
+				.title{
+					font-size: 30px;
+					letter-spacing: 1px;
+					color: #333;
+					font-weight: bold;
+					margin-bottom: 20px;
+				}
+				.subtitle{
+					font-size: 16px;
+					letter-spacing: 1px;
+					color: #999;
+				}
+			}
+			.modal-content{
+				position: relative;
+				margin: auto;
+				&:after{
+					display: block;
+					content: '';
+					width: 100%;
+					height: 0;
+					background-color: #fff;
+					opacity: 0;	
+					border-radius: 10px;
+					position: absolute;
+					top: 0;
+					left: 0;
+					transition: 1s;
+				}
+				.mail-content{
+					overflow: hidden;
+					max-height: 100%;
+				}
+				.mail-open{
+					width: 150px;
+					height: 75px;
+					background-color: transparent;
+					position: absolute;
+					top: 0;
+					left: 50%;
+					transform-origin: 50%  100%;
+					transform: translate(-50% , -100%) scaleY(0.9); 
+					border-radius: 10px;
+					overflow: hidden;
+					opacity: 0;
+					&:after{
+						display: block;
+						content: '';
+						width: 106px;
+						height: 106px;
+						background-color: #f6f6f6;
+						border-radius: 10px;
+						border: solid 10px #333;
+						position: absolute;
+						left: 50%;	
+						bottom: 0;
+						transform: translate(-50% , 50%) rotate(45deg);
+					}
+				}
+			}
+				
+			&.contact-to-white{
+				.modal-content{
+					&:after{
+						height: 100%;
+						opacity: 1;	
+					}
+				}	
+			}
+			&.contact-to-mail{
+				.modal-content{
+					transition: 0.7s;
+					width: 150px;
+					height: 100px !important;
+					.mail-open{
+						transition: 0.5s;
+						opacity: 1;
+						z-index: 2;
+					}
+				}
+			}
+			&.contact-mail-close{
+				.modal-content{
+					.mail-open{
+						transform: translate(-50% , -100%) scaleY(0.9) rotatex(180deg);
+					}
+				}
+			}
+			&.contact-sand{
+				.modal-content{
+					transition: 0;
+					// transform: rotate(10deg) scale(0.5);
+					// opacity: 0;
+				}
+				.thanks-content{
+					opacity: 1;
+				}
+			}
+
+		}
+	}

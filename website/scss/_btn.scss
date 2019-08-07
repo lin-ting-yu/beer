@@ -1,0 +1,32 @@
+
+
+.beer-comp-btn{
+	display: block;
+	width: 100%;
+	flex: 1;
+	.btns-content{
+		display: flex;
+		justify-content: center;
+		.btn-content{
+			flex: 1;
+			text-align: center;
+			border: solid 1px #333;
+			border-radius: 22px;
+			max-width: 150px;
+			transition: 0.5s;
+			&:hover{
+				transform: translateY(-2px);
+				box-shadow: 0 2px 2px -1px rgba(0,0,0,0.2);
+			}
+			.link-content{
+				width: 100%;
+				display: inline-block;
+				padding: 10px 20px;
+				font-size: 16px;
+				letter-spacing: 1px;
+				border-radius: 22px;
+			}
+			.text{}
+		}
+	}
+}

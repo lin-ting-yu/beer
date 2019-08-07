@@ -23,7 +23,7 @@
         }
       }
     },
-    "foodImage": "../img/food-01.png",
+    "foodImage": "./img/food-01.png",
     "content":{
       "section_1":{
         "title": "比利時啤酒",
@@ -82,7 +82,7 @@
         }
       }
     },
-    "foodImage": "../img/food-02.png",
+    "foodImage": "./img/food-02.png",
     "content":{
       "section_1":{
         "title": "TAIWAN BEER",
@@ -141,7 +141,7 @@
         }
       }
     },
-    "foodImage": "../img/food-03.png",
+    "foodImage": "./img/food-03.png",
     "content":{
       "section_1":{
         "title": "TAIWAN BEER333",

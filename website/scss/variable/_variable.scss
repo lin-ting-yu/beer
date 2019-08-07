@@ -14,6 +14,11 @@ $header-pc-height-2:     60px;
 $header-mobile-height-1: 40px;
 
 // @mixin
+@mixin text-one(){
+      overflow: hidden;
+      white-space: nowrap;
+      text-overflow: ellipsis;
+}
 @mixin can-change(){
 	&:before{
       display: block;
@@ -27,7 +32,29 @@ $header-mobile-height-1: 40px;
       left: 0;
     }
 }
-
+@mixin X-btn($weight:1px,$color:#000){
+      display: block;
+      width: 100%;
+      height: 100%;
+      position: relative;
+      &:before,&:after{
+            display: block;
+            content: '';
+            width: $weight;
+            height: 140%;
+            border-radius: $weight / 2;
+            background-color: $color;
+            position: absolute;
+            top: 50%;
+            left: 50%;
+      }
+      &:before{
+            transform: translate(-50% , -50%) rotate(45deg);
+      }
+      &:after{
+            transform: translate(-50% , -50%) rotate(-45deg);
+      }
+}
 
 
 
