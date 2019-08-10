@@ -19,6 +19,8 @@ function ajaxEvent(){
         },      // 錯誤後執行的函數
         success: function (response) {
             window.beerData = $.parseJSON(response);
+            $loadingHandle.keyDom = $($loadingHandle.key);
+            $loadingHandle.setSetp(0.25);
             loadingObj(beerData, bindingEvent);
         }// 成功後要執行的函數
     });
@@ -31,7 +33,8 @@ function bindingEvent(){
                     $drawIconHandle,
                     $inputHandle,
                     $textareaHandle,
-                    $contactHandle];
+                    $contactHandle,
+                    $loadingHandle];
     var _onResize    = [],
         _onScroll    = [],
         _onDraw      = [],
@@ -226,7 +229,7 @@ const threeJsControlData = {
     mirror: 1,
     transformXing:false,
     activePos: {
-        scale: 1,
+        scale: 1.2,
         x: -22,
         y: -3,
         z: 0,
@@ -251,22 +254,32 @@ const materialObj = {
     textureCube: null,
     _textureLoader: new THREE.TextureLoader(),
     _CubeTextureLoader: new THREE.CubeTextureLoader(),
-    glassMaterial: function() {
+    glassMaterial: function(custom) {
         let self = this;
-        return new THREE.MeshPhongMaterial({
+        let defaultSetting = {
             color: 0xffffff,
             flatShading: true,
             envMap: self.textureCube,
-            transparent: true
-        });
+            transparent: true,
+            side: THREE.BackSide,
+            shininess: 100
+        };
+        if(typeof custom === "object"){
+            $.extend(defaultSetting, custom);
+        }
+        return new THREE.MeshPhongMaterial(defaultSetting);
     },
-    coverAndLogo: function() {
-        return new THREE.MeshStandardMaterial({
+    coverAndLogo: function(custom) {
+        let defaultSetting = {
             metalness: 0.05,
             roughness: 0.9,
             side: THREE.DoubleSide,
             transparent: true
-        });
+        };
+        if(typeof custom === "object"){
+            $.extend(defaultSetting, custom);
+        }
+        return new THREE.MeshStandardMaterial(defaultSetting);
     },
     foodPlane: function(url){
         return new THREE.MeshBasicMaterial({
@@ -282,6 +295,30 @@ materialObj.textureCube.mapping = THREE.CubeRefractionMapping;
 
 
 //===========
+const $loadingHandle = {
+    key: '.beer-comp-loading',
+    stepType: [25, 50, 70, 100],
+    setSetp: function(num){
+        num = Math.floor(num * 100);
+        let result = this.stepType
+                        .filter((typeNum, index) => {
+                            return num <= typeNum
+                        })[0] || 0;
+        this.keyDom.addClass('step'+result);
+    },
+    final: function(){
+        this.keyDom.addClass('start');
+        setTimeout(()=>{
+            this.keyDom.hide();
+        }, 1000);
+    },
+    initial: function(){
+        this.keyDom.on('click mousedown mouseup', function(e){
+            e.preventDefault();
+            e.stopPropagation();
+        });
+    }
+}
 const $contactHandle = {
     key: '#popup-contact',
     keyContent: null,
@@ -342,6 +379,8 @@ const $contactHandle = {
             this.keyDom.removeClass('contact-mail-close');
             this.keyDom.removeClass('contact-sand');
             this.isSand = false;
+            $inputHandle.checkAllVal(this.keyDom);
+            $textareaHandle.checkAllVal(this.keyDom);
         }
     },
     initial: function(){
@@ -367,12 +406,16 @@ const $inputHandle = {
             }
         });
     },
-    checkAllVal: function(){
-        let self = this;
-        this.keyFormDOM.each(function(_, DOM){
-            let thisDOM = $(DOM)
+    checkAllVal: function(target){
+        target = target? $(target).find('.beer-form-el-input input'): $inputHandle.keyFormDOM;
+        target.each(function(_, DOM){
+            let thisDOM = $(DOM);
+            let thisDOMParent = thisDOM.parents($inputHandle.key);
             if(thisDOM.val() !== ''){
-                thisDOM.parents(self.key).addClass('is-focus');
+                thisDOMParent.addClass('is-focus');
+            }
+            else{
+                thisDOMParent.removeClass('is-focus');
             }
         });
     },
@@ -395,8 +438,18 @@ const $textareaHandle = {
             self._checkSize(this);
         });
     },
-    checkAllVal: function(){
-         $inputHandle.checkAllVal.call(this);
+    checkAllVal: function(target){
+        target = target? $(target).find('.beer-form-el-textarea textarea'): $textareaHandle.keyFormDOM;
+        target.each(function(_, DOM){
+            let thisDOM = $(DOM);
+            let thisDOMParent = thisDOM.parents($textareaHandle.key);
+            if(thisDOM.val() !== ''){
+                thisDOMParent.addClass('is-focus');
+            }
+            else{
+                thisDOMParent.removeClass('is-focus');
+            }
+        });
     },
     checkAllSize: function(target){
         target = target? $(target).find('.beer-form-el-textarea textarea'): $textareaHandle.keyFormDOM;
@@ -460,7 +513,6 @@ const $modalHandle = {
         this._initBindEvent();
         this._initDefaultEvent();
     }
-
 };
 const $drawIconHandle = {
     key: '#draw-icon',
@@ -985,10 +1037,10 @@ const $threeHandle = {
                 new THREE.Vector3(50, 10, -45),
                 false)
             .setStats(document.getElementById('stats'))
-            .addLight('AmbientLight', 'AmbientLight', 0x333333)
-            .addLight('PointLight1', 'PointLight', 0xffffff, new THREE.Vector3(-300, 0, -500))
-            .addLight('PointLight2', 'PointLight', 0xffffff, new THREE.Vector3(200, 0, 0))
-            .addLight('PointLight3', 'PointLight', 0xffffff, new THREE.Vector3(-100, 500, 900))
+            .addLight('AmbientLight', 'AmbientLight', 0x999999)
+            .addLight('PointLight1', 'PointLight', 0xffffff, new THREE.Vector3(50, 150, -150))
+            .addLight('PointLight2', 'PointLight', 0xffffff, new THREE.Vector3(50, 150, 150))
+            .addLight('PointLight3', 'PointLight', 0x222222, new THREE.Vector3(-500, -300, 0))
             .rr()
             .rendererDOM(appendToDOM);
 
@@ -1012,6 +1064,10 @@ const $threeHandle = {
         this._createWord();
         this.carousel = new CarouselBeer(beer.scene, beerThreeData, threeJsControlData);
         this._threeJsRender();
+        $loadingHandle.setSetp(1);
+        setTimeout(()=>{
+            $loadingHandle.final();
+        },700);
     },
     onMouseMove: function(e){
         if(!isMobile){
@@ -1027,6 +1083,7 @@ const $threeHandle = {
         threeJsControlData.mouseYPercen = 15 / $windowData.inHeight;
     }
 }
+
 //============   class   ==================//
     class Beer {
         constructor(data) {
@@ -1037,35 +1094,37 @@ const $threeHandle = {
             this._createFoodImg();
             this.size = 'default';
         }
-        _coverfn(child, material) {
-
+        smoothObj(geometry, subdivisions ) {
+            var modifier = new SubdivisionModifier(subdivisions);
+            var smoothGeometry = modifier.modify(geometry);
+            return smoothGeometry
+        }
+        _createFn(child, childName, material) {
             child.geometry.computeFaceNormals()
             child.geometry.computeVertexNormals()
-            if (child.name.toLowerCase() === "bottle") {
-                let bottle = new THREE.Mesh(child.geometry, material);
-                bottle.name = "bottle";
-                return bottle;
+            let innerGeometry = child.geometry;
+            let objSmoothNum = this.data.children[childName].objSmooth;
+            
+            if(objSmoothNum){
+                innerGeometry = this.smoothObj(child.geometry, objSmoothNum);
             }
-            // coronaBumpMat.bumpScale = 1;
-            child.material = material;
-            return child;
+
+            let innerChild = new THREE.Mesh(innerGeometry, material);
+            innerChild.name = childName;
+            return innerChild;
         }
         _createBeer() {
             let self = this;
             self.data.loadedMesh.children.forEach(function(child, index) {
                 let childName = child.name.toLowerCase();
-                let material = materialObj[self.data.children[childName].material]();
+                let childData = self.data.children[childName];
+                let materialCustom = childData.materialCustom? childData.materialCustom: null;
+                let material = materialObj[childData.material](materialCustom);
                 let maps = self.data.children[childName].maps
                 for (let map in maps) {
                     material[map] = materialObj._textureLoader.load(maps[map]);
                 }
-                if (childName === "bottle") {
-                    self.objs.push(self._coverfn(child, material));
-                } else if (childName === "cover") {
-                    self.objs.push(self._coverfn(child, material));
-                } else if (childName === "logo") {
-                    self.objs.push(self._coverfn(child, material));
-                }
+                self.objs.push(self._createFn(child, childName, material));
             });
         }
         _createFoodImg(){
@@ -1114,7 +1173,11 @@ const $threeHandle = {
                 item.transform('material', 'opacity', 0);
                 item.transform('rotation', 'z', 0.5);
                 item.transform('position', 'y', threeJsControlData.activePos.y);
-
+                if(threeJsControlData.activePos.scale !== 1){
+                    item.transform('scale', 'x', threeJsControlData.activePos.scale);
+                    item.transform('scale', 'y', threeJsControlData.activePos.scale);
+                    item.transform('scale', 'z', threeJsControlData.activePos.scale);
+                }
                 //food設定
                 item.transform('material', 'opacity', 0, 'food');
                 item.transform('position', 'x', -2, 'food');
@@ -1268,9 +1331,11 @@ const $threeHandle = {
 //=============== tool ====================//
     function loadingObj(beerData, callback){
       let index = 0;
+      $loadingHandle.setSetp(0.50);
       function innerLoadingObj(index){
         if(index >= beerData.length){
           callback();
+          $loadingHandle.setSetp(0.70);
           return;
         }
         const loader = new THREE.OBJLoader();
@@ -1314,12 +1379,11 @@ const $threeHandle = {
                 3  * n2 * Math.pow(t, 2) * (1 - t) + 
                 n3 * Math.pow(t, 3);
     }
-
     function bezier_point(t, p0, p1, p2, p3){
         return [bezier_coordinate(t, p0[0], p1[0], p2[0], p3[0]),
                 bezier_coordinate(t, p0[1], p1[1], p2[1], p3[1])];
     }
-
+    
 //=============== tool: end ===============//
 
 

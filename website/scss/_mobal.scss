@@ -10,12 +10,13 @@
 	}
 	.three-canvas,.layout-content{
 		transition: filter 0.5s;
-		// filter: blur(0);
 	}
-
 
 	.modal-backdrop{
 		background-color: #eee;
+		&.show{
+			opacity: 0.7;
+		}
 	}
 
 //beer-comp-modal
@@ -70,7 +71,7 @@
 				}
 			}
 			.modal-header,.modal-body,.modal-footer{
-				padding: 20px;
+				padding: 20px 30px;
 				position: relative;
 			}
 			.modal-header{
@@ -121,7 +122,7 @@
 				.subtitle{
 					font-size: 16px;
 					letter-spacing: 1px;
-					color: #999;
+					color: #555;
 				}
 			}
 			.modal-content{

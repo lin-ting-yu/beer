@@ -136,12 +136,12 @@
       transform: rotate(90deg);
     }
     .section-title{
-      font-size: 50px;
+      font-size: 80px;
       font-weight: bold;
       letter-spacing: 2px;
-      margin-bottom: 15px;
+      margin-bottom: 30px;
       text-shadow: 0 0 5px rgba(0,0,0,0.1);
-      line-height: 1.4em;
+      line-height: 1.2em;
       position: relative;
       &:after{
         display: block;
@@ -157,7 +157,7 @@
       font-weight: bold;
       letter-spacing: 2px;
       margin-bottom: 40px;
-      line-height: 1.4em;
+      line-height: 1.8em;
       position: relative;
       .text{}
     }
@@ -234,8 +234,10 @@
   }
   .section-1{
     .content-section-info{
-      max-width: 340px;
       margin-left: 70px;
+      .section-subtitle{
+        max-width: 340px;
+      }
     }
   }
   .section-2{

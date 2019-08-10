@@ -1,177 +1,183 @@
 [
-  { "name": "cola",
-    "objUrl":"./obj/Corona/GlassBottle5.obj",
+  { "name": "PIRAAT",
+    "objUrl":"./obj/Piraat/Piraat-0810.obj",
     "loadedMesh": null,
     "transparent": true,
     "children": {
       "bottle": {
         "material": "glassMaterial",
+        "objSmooth": 2,
         "maps": {
-          "map": "./obj/Corona/bottle.png"
+          "map": "./obj/Piraat/Piraat-map-2.png"
         }
       },
       "cover": {
         "material": "coverAndLogo",
         "maps": {
-          "map": "./obj/Corona/BotellaText.jpg"
+          "map": "./obj/Piraat/Piraat-map-2.png"
         }
       },
       "logo": {
         "material": "coverAndLogo",
+        "materialCustom": {
+          "depthWrite": false
+        },
         "maps": {
-          "map": "./obj/Corona/BotellaText.jpg"
+          "map": "./obj/Piraat/Piraat-map-2.png"
         }
       }
     },
     "foodImage": "./img/food-01.png",
     "content":{
       "section_1":{
-        "title": "比利時啤酒",
-        "subtitle": "水果與啤酒的樂章",
+        "title": "PIRAAT",
+        "subtitle": "Any pirate will definitely fall in love with it!",
         "text": "清爽的甜味水果將您的味蕾傳遞到熱帶目的地，無論外面的天氣如何"
       },
       "section_2":{
-        "title": "比利時啤酒",
-        "subtitle": "beertype",
-        "percen": 5.5,
-        "text": "多汁的跳躍炸彈，讓我們想起了我們的Taproom之家。清爽的甜味水果將您的味蕾傳遞到熱帶目的地，無論外面的天氣如何，啤酒都準備好啜飲。",
+        "title": "Belgian Strong Ale",
+        "subtitle": "Beer Style",
+        "percen": 10.5,
+        "text": "With aggressive amounts of hops and malts a mild sweetness is coupled with colorful aromas fresh bread, spices, tropial fruits for a compex taste any ‘Pirate’ would enjoy!",
         "list":[
           { "title1": "REGION",
-            "text1": "Mexico"},
+            "text1": "Belgium"},
           { "title2": "Tasting",
-            "text2": "Mango, Papaya, Candied Peach"},
+            "text2": "fermented fruits, brandy, spicy"},
           { "title3": "Wheat",
-            "number3": 2.5},
+            "number3": 4.5},
           { "title4": "Hops",
             "number4": 4}
         ]
       },
       "section_3":{
         "title": "PAIRINGS",
-        "text": "The model is in the root directory of the project. I'm, so it isn't the CORS problem.",
+        "text": "At the table it suits hearty and strong flavoured dishes such as game and foie gras.",
         "list":[
           { "title1": "Food",
-            "text1": "Spicy Noodle Dishes, grilled fish, curry"},
+            "text1": "foie gras, ripened and refined cheeses"},
           { "title2": "Glassware",
             "text2": "Tulip"}
         ]
       }
     }
   },
-  { "name": "cola",
-    "objUrl":"./obj/Corona/GlassBottle5.obj",
+  { "name": "TAIWAN BEER CLASSIC",
+    "objUrl":"./obj/Taiwan-beer/Taiwan-beer.obj",
     "loadedMesh": null,
     "transparent": true,
     "children": {
-      "bottle": {
-        "material": "glassMaterial",
-        "maps": {
-          "map": "./obj/Corona/bottle.jpg"
-        }
-      },
-      "cover": {
-        "material": "coverAndLogo",
-        "maps": {
-          "map": "./obj/Corona/BotellaText.jpg"
-        }
-      },
       "logo": {
-        "material": "coverAndLogo",
+        "material": "glassMaterial",
+        "materialCustom": {
+          "side": 0,
+          "envMap": null
+        },
         "maps": {
-          "map": "./obj/Corona/BotellaText.jpg"
+          "map": "./obj/Taiwan-beer/Taiwan-beer-map.png"
         }
       }
     },
     "foodImage": "./img/food-02.png",
     "content":{
       "section_1":{
-        "title": "TAIWAN BEER",
-        "subtitle": "The console does not report any errors. but callback",
+        "title": "TAIWAN BEER CLASSIC",
+        "subtitle": "As a Taiwanese, I have to say it’s CLASSIC!",
         "text": "The model is in the root directory of the project. I'm, so it isn't the CORS problem."
       },
       "section_2":{
-        "title": "TAIWAN BEER",
-        "subtitle": "beertype",
-        "percen": 15.5,
-        "text": "The model is in the root directory of the project. I'm, so it isn't the CORS problem. The model is in the root directory of the project. I'm, so it isn't the CORS problem.",
-        "list":[
-          { "title1": "Region",
-            "text1": "2Mexico"},
-          { "title2": "Tasting",
-            "text2": "2Mango, Papaya, Candied Peach"},
-          { "title3": "Wheat",
-            "number3": 3.5},
-          { "title4": "Hops",
-            "number4": 5}
-        ]
-      },
-      "section_3":{
-        "title": "PAIRINGS",
-        "text": "The model is in the root directory of the project. I'm, so it isn't the CORS problem.",
-        "list":[
-          { "title1": "Food",
-            "text1": "Spicy Noodle Dishes, grilled fish, curry"},
-          { "title2": "Glassware",
-            "text2": "Tulip"}
-        ]
-      }
-    }
-  },
-  { "name": "cola",
-    "objUrl":"./obj/Corona/GlassBottle5.obj",
-    "loadedMesh": null,
-    "transparent": true,
-    "children": {
-      "bottle": {
-        "material": "glassMaterial",
-        "maps": {
-          "map": "./obj/Corona/bottle.jpg"
-        }
-      },
-      "cover": {
-        "material": "coverAndLogo",
-        "maps": {
-          "map": "./obj/Corona/BotellaText.jpg"
-        }
-      },
-      "logo": {
-        "material": "coverAndLogo",
-        "maps": {
-          "map": "./obj/Corona/BotellaText.jpg"
-        }
-      }
-    },
-    "foodImage": "./img/food-03.png",
-    "content":{
-      "section_1":{
-        "title": "TAIWAN BEER333",
-        "subtitle": "The console does not report any errors. but callback",
-        "text": "The model is in the root directory of the project. I'm, so it isn't the CORS problem."
-      },
-      "section_2":{
-        "title": "比利時啤酒3",
+        "title": "Pale Lager-North Am. / Light",
         "subtitle": "beertype",
         "percen": 4.5,
-        "text": "2多汁的跳躍炸彈，讓我們想起了我們的Taproom之家。清爽的甜味水果將您的味蕾傳遞到熱帶目的地，無論外面的天氣如何，啤酒都準備好啜飲。",
+        "text": "Barley malt, Penglai rice and aromatic, bitter-flavored hops, retaining a strong scent of wheat and refreshing hops, fresh and refreshing.",
         "list":[
-          { "title1": "REGION",
-            "text1": "3Mexico"},
+          { "title1": "Region",
+            "text1": "Taiwan"},
           { "title2": "Tasting",
-            "text2": "3Mango, Papaya, Candied Peach"},
+            "text2": "sweet, bitter, wheat"},
           { "title3": "Wheat",
-            "number3": 4.5},
+            "number3": 2.5},
           { "title4": "Hops",
             "number4": 3}
         ]
       },
       "section_3":{
         "title": "PAIRINGS",
-        "text": "The model is in the root directory of the project. I'm, so it isn't the CORS problem.",
+        "text": "The classic taste, paired with Taiwanese classic snacks, is definitely the best.",
         "list":[
           { "title1": "Food",
-            "text1": "Spicy Noodle Dishes, grilled fish, curry"},
+            "text1": "Small Fish, Peanuts, Fried food"},
           { "title2": "Glassware",
-            "text2": "Tulip"}
+            "text2": "Pint Glass"}
+        ]
+      }
+    }
+  },
+  { "name": "CORONA",
+    "objUrl":"./obj/Corona/CoronaAndLemon.obj",
+    "loadedMesh": null,
+    "transparent": true,
+    "children": {
+      "bottle": {
+        "material": "glassMaterial",
+        "objSmooth": 2,
+        "maps": {
+          "map": "./obj/Corona/Corona-map.png"
+        }
+      },
+      "cover": {
+        "material": "coverAndLogo",
+        "maps": {
+          "map": "./obj/Corona/Corona-map.png"
+        }
+      },
+      "logo": {
+        "material": "coverAndLogo",
+        "maps": {
+          "map": "./obj/Corona/Corona-map.png"
+        }
+      },
+      "lemon": {
+        "material": "coverAndLogo",
+        "materialCustom": {
+          "shininess": 10
+        },
+        "maps": {
+          "map": "./obj/Corona/Corona-map.png"
+        }
+      }
+    },
+    "foodImage": "./img/food-03.png",
+    "content":{
+      "section_1":{
+        "title": "CORONA Extra",
+        "subtitle": "Corona with lemon is the most romantic marriage of beer!",
+        "text": "The model is in the root directory of the project. I'm, so it isn't the CORS problem."
+      },
+      "section_2":{
+        "title": "Pale Lager-North Am. / Light",
+        "subtitle": "beertype",
+        "percen": 4.5,
+        "text": "Sunshine, beach, Kello, suitable for those who love to relax by the sea, add lemon, cool and cool, from Canada's Cola beer!",
+        "list":[
+          { "title1": "REGION",
+            "text1": "Mexico"},
+          { "title2": "Tasting",
+            "text2": "Dry, Grainy, Light, Neutral"},
+          { "title3": "Wheat",
+            "number3": 3},
+          { "title4": "Hops",
+            "number4": 2.5}
+        ]
+      },
+      "section_3":{
+        "title": "PAIRINGS",
+        "text": "Corona with chicken or cornflakes makes friends get together more happy!",
+        "list":[
+          { "title1": "Food",
+            "text1": "Nuts, Chicken, Mexican tortilla chips"},
+          { "title2": "Glassware",
+            "text2": "Pint Glass"}
         ]
       }
     }

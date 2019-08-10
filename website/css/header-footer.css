@@ -181,7 +181,7 @@
         width: 0; }
       .beer-comp-header .beer-section-step .section-scroll-text .text {
         display: block;
-        width: 150px;
+        width: 30vh;
         height: 12px;
         vertical-align: top;
         position: relative; }

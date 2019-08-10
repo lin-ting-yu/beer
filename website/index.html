@@ -31,6 +31,7 @@
     <script type="text/javascript" src="js/js-framework-plugin/three/OBJLoader.js"></script>
     <script type="text/javascript" src="js/js-framework-plugin/three/OrbitControls.js"></script>
     <script type="text/javascript" src="js/js-framework-plugin/three/Stats.min.js"></script>
+    <script type="text/javascript" src="js/js-framework-plugin/three/SubdivisionModifier.js"></script>
     <script type="text/javascript" src="js/app.js"></script>
 </head>
 <body onselectstart="return false">
@@ -110,17 +111,17 @@
                         <div class="section-subtitle change-effect-white">
                             <span class="text" data-key="subtitle"></span>
                         </div>
-                        <div class="section-content-text change-effect-fade">
+                        <!-- <div class="section-content-text change-effect-fade">
                             <span class="text" data-key="text"></span>
-                        </div>
+                        </div> -->
                     </div>
                         
                 </div>
                 <div class="content-section section-2 page-section" data-name="section_2">
                     <div class="content-section-info">
-                       <div class="section-subtitle change-effect-white">
-                            <span class="text" data-key="subtitle"></span>
-                            <span class="text percen show-m" data-key="percen">4.8</span>
+                       <div class="section-subtitle">
+                            <span class="text">Beer Style</span>
+                            <span class="text percen show-m change-effect-white" data-key="percen">4.8</span>
                         </div>
                         <div class="section-title change-effect-white">
                             <span class="text" data-key="title"></span>
@@ -212,9 +213,26 @@
         <div class="beer-comp-modal" w3-include-html="include/include-copyright-popup.html"></div>
         <div class="beer-comp-modal" w3-include-html="include/include-contact-popup.html"></div>
     </div>
+    <div class="beer-comp-loading">
+        <div class="loading-content">
+            <div class="loading-info">
+                <div class="icon-content">
+                    <div class="bottle">
+                        <div class="beer-step"></div>
+                        <img src="img/loading-bottle_bottle.svg" alt="" class="img">
+                    </div>
+                    <div class="cover">
+                        <img src="img/loading-bottle_cover.svg" alt="" class="img">
+                    </div>
+                </div>
+                <div class="bar">
+                    <div class="bar-step"></div>
+                </div>
+            </div>
+        </div>
+    </div>
     <script type="text/javascript">
         w3IncludeHTML(function(){
-            //當天、地、左選單都include進來後呼叫
             ajaxEvent();
         });
     </script>
