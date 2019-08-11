@@ -150,7 +150,7 @@
     "foodImage": "./img/food-03.png",
     "content":{
       "section_1":{
-        "title": "CORONA Extra",
+        "title": "CORONA EXTRA",
         "subtitle": "Corona with lemon is the most romantic marriage of beer!",
         "text": "The model is in the root directory of the project. I'm, so it isn't the CORS problem."
       },

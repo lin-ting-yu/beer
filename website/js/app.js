@@ -34,7 +34,8 @@ function bindingEvent(){
                     $inputHandle,
                     $textareaHandle,
                     $contactHandle,
-                    $loadingHandle];
+                    $loadingHandle,
+                    $windowSizeHandle];
     var _onResize    = [],
         _onScroll    = [],
         _onDraw      = [],
@@ -295,6 +296,113 @@ materialObj.textureCube.mapping = THREE.CubeRefractionMapping;
 
 
 //===========
+const $windowSizeHandle = {
+    key: '.beer-comp-window-size',
+    keyBeers: null,
+    invertedBeer:[],
+    invertedClass:['inverted-right','inverted-left'],
+    keyArrow:{
+        height: null,
+        width: null
+    },
+    keyPrompt: null,
+    windowWidthSmall: false,
+    windowHeightSmall: false,
+    _initChildDOM: function(){
+        this.keyBeers = this.keyDom.find('.beer-content');
+        this.keyArrow.height = this.keyDom.find('.hendle-height');
+        this.keyArrow.width  = this.keyDom.find('.hendle-width');
+        this.keyPrompt = this.keyDom.find('.prompt-text');
+    },
+    handleSize: function(){
+        if($windowData.width <= 900){
+            this.windowWidthSmall = true;
+        }
+        if($windowData.inHeight <= 500){
+            this.windowHeightSmall = true;
+        }
+    },
+    handleArrow: function(){
+        if(this.windowWidthSmall){
+            this.keyArrow.width.addClass('show');
+        }
+        else{
+            this.keyArrow.width.removeClass('show');
+        }
+        if(this.windowHeightSmall){
+            this.keyArrow.height.addClass('show');
+        }
+        else{
+            this.keyArrow.height.removeClass('show');
+        }
+    },
+    handleBeerInverted: function(){
+        let self = this;
+
+        this.keyBeers.each((i, beer)=>{
+            let beerPos = beer.getBoundingClientRect();
+            if(self.invertedBeer.indexOf(beer) === -1){
+                if(beerPos.left <= 0){
+                    beer.classList.add('inverted-right');
+                    self.invertedBeer.push(beer);
+                    console.log(beer.classList)
+                }
+                else if(beerPos.right > $windowData.width){
+                    beer.classList.add('inverted-left');
+                    self.invertedBeer.push(beer);
+                }
+                else if(beerPos.top < 0){
+                    beer.classList.add(arrayRandom(self.invertedClass));
+                    self.invertedBeer.push(beer);
+                }
+            }
+        });
+    },
+    handlePromptText: function(){
+        if(this.invertedBeer.length){
+            this.keyPrompt.addClass('toggle');
+        }
+    },
+    reset: function(){
+        this.windowWidthSmall = false;
+        this.windowHeightSmall = false;
+        this.keyDom.removeClass('show');
+        this.invertedBeer.forEach(beer=>{
+            beer.classList.remove('inverted-right');
+            beer.classList.remove('inverted-left');
+        });
+        this.invertedBeer = [];
+        this.keyArrow.height.removeClass('show');
+        this.keyArrow.width.removeClass('show');
+        this.keyPrompt.removeClass('toggle');
+    },
+    handleAll: function(){
+        this.handleSize();
+        if(this.windowWidthSmall || this.windowHeightSmall){
+            this.keyDom.addClass('show');
+            this.handleArrow();
+            this.handleBeerInverted();
+            this.handlePromptText();
+            if($windowData.width > 900){
+                this.windowWidthSmall = false;
+            }
+            if($windowData.inHeight > 500){
+                this.windowHeightSmall = false;
+            }
+            if(!this.windowWidthSmall && !this.windowHeightSmall){
+                this.reset();
+            }
+        }
+    },
+    onResize: function(){
+        this.handleAll();
+    },
+    initial: function(){
+        this._initChildDOM();
+        this.handleAll();
+    }
+
+}
 const $loadingHandle = {
     key: '.beer-comp-loading',
     stepType: [25, 50, 70, 100],
@@ -1382,6 +1490,9 @@ const $threeHandle = {
     function bezier_point(t, p0, p1, p2, p3){
         return [bezier_coordinate(t, p0[0], p1[0], p2[0], p3[0]),
                 bezier_coordinate(t, p0[1], p1[1], p2[1], p3[1])];
+    }
+    function arrayRandom(array){
+        return array[Math.floor(array.length * Math.random())];
     }
     
 //=============== tool: end ===============//
