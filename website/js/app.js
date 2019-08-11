@@ -377,6 +377,7 @@ const $windowSizeHandle = {
         this.keyPrompt.removeClass('toggle');
     },
     handleAll: function(){
+        if(isMobile){ return; }
         this.handleSize();
         if(this.windowWidthSmall || this.windowHeightSmall){
             this.keyDom.addClass('show');
@@ -725,6 +726,8 @@ const $drawIconHandle = {
         ****** Underlind code: end   ****/
     },
     initial: function(){
+        if(isMobile){ return; }
+
         this.mousePos.x = $windowData.mouseX;
         this.mousePos.y = $windowData.mouseY;
         this.mousePos.nextX = $windowData.mouseX;
@@ -740,13 +743,9 @@ const $drawIconHandle = {
         ****** Underlind code: end   ****/
     },
     onMouseMove: function(){
+        if(isMobile){ return; }
         this.time = 0;
         this.setNextPos();
-    },
-    onResize: function(){
-        // if(this.iconToUnderlineDOM !== null){
-        //     this.setToUnderlindPos();
-        // }
     }
 };
 const $headerHandle = {

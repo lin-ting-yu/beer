@@ -4,7 +4,7 @@ $layout-max-width-1: 1000px;
 $screen-pc-size: 1440px;
 $screen-pad-l-size: 1060px;
 $screen-pad-m-size: 992px;
-$screen-pad-s-size: 768px;
+$screen-pad-s-size: 900px;
 $screen-mobile-size: 480px;
 $screen-mobile-s-size: 359px;
 
@@ -86,35 +86,34 @@ $header-mobile-height-1: 40px;
     }
   }
 }
-@mixin transform-bounceInDown($name,$style1,$style2,$style3,$style4,$style5){
+@mixin transform-inverted($name, $start, $end, $style1, $style2){
   @keyframes #{$name} {
-    from,
-    60%,
-    75%,
-    90%,
-    to {
-      -webkit-animation-timing-function: cubic-bezier(0.215, 0.61, 0.355, 1);
-      animation-timing-function: cubic-bezier(0.215, 0.61, 0.355, 1);
+    0% {
+      animation-timing-function: cubic-bezier(0.73,0.01,0.92,0.4);
+      transform: $start;
     }
 
-    0% {
+    50% {
+      animation-timing-function: cubic-bezier(0,0.82,0.62,1);
+      transform: $end;
+    }
+
+    68% {
+      animation-timing-function: cubic-bezier(0.55,0.11,0.87,0.57);
       transform: $style1;
     }
 
-    60% {
+    86% {
+      animation-timing-function: cubic-bezier(0.17,0.47,0.61,0.95);
+      transform: $end;
+    }
+
+    93% {
+      animation-timing-function: cubic-bezier(0.55,0.11,0.87,0.57);
       transform: $style2;
     }
-
-    75% {
-      transform: $style3;
-    }
-
-    90% {
-      transform: $style4;
-    }
-
-    to {
-      transform: $style5;
+    100% {
+      transform: $end;
     }
   }
 }

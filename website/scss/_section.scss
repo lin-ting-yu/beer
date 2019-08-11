@@ -1,6 +1,5 @@
 
 
-
   .content-section{
     display: flex;
     width: 100%;
@@ -13,6 +12,11 @@
     top: 50%;
     left: 50%;
     transform: translate(-50% , -50%);
+    @media screen and (max-width: $screen-pad-s-size){
+      body.isMobile &{
+        position: relative;
+      }
+    }
     .plus, .brackets{
       width: 20px;
       height: 20px;
@@ -143,6 +147,9 @@
       text-shadow: 0 0 5px rgba(0,0,0,0.1);
       line-height: 1.2em;
       position: relative;
+      @media screen and (max-width: $screen-pad-l-size){
+        font-size: 70px;
+      }
       &:after{
         display: block;
         width: 2em;
@@ -174,11 +181,35 @@
       }
     }
     &.changed{}
+    body:not(.isMobile) &{
+      @media screen and (max-height: 600px){
+        .section-title{
+          font-size: 60px;
+        }
+        .section-subtitle{
+          line-height: 1.3em;
+        }
+        .section-content-text{
+          line-height: 1.5em;
+        }
+      }
+    }
   }
 
 // 內頁
   .page-section{
     // position: absolute;
+    .section-title{
+      font-size: 40px;
+      font-weight: bold;
+      line-height: 1.4em;
+      letter-spacing: 1px;
+      margin-bottom: 20px;
+      color: #333;
+      @media screen and (max-width: $screen-pad-l-size){
+        font-size: 30px;
+      }
+    }
     .section-subtitle{
       font-size: 18px;
       font-weight: bold;
@@ -192,14 +223,6 @@
           font-weight: normal;
         }
       }
-    }
-    .section-title{
-      font-size: 40px;
-      font-weight: bold;
-      line-height: 1.4em;
-      letter-spacing: 1px;
-      margin-bottom: 20px;
-      color: #333;
     }
     .section-content-text{
       font-size: 15px;
@@ -229,7 +252,44 @@
           font-weight: normal;
         }
       }
-        
+    }
+    body:not(.isMobile) &{
+      @media screen and (max-height: 600px){
+        .section-title{
+          line-height: 1.3em;
+          margin-bottom: 10px;
+          font-size: 30px;
+        }
+        .section-subtitle{
+          line-height: 1.3em;
+        }
+        .section-content-text{
+          line-height: 1.5em;
+          font-size: 14px;
+          letter-spacing: 0.5px;
+          margin-bottom: 20px;
+        }
+        .beer-comp-item-list-1{
+          .item-list-1-content{
+            .item-list-1-ul{
+              .item-list-1-li{
+                &:nth-child(n+3){
+                  margin-top: 15px;
+                }
+              }
+            }
+          }
+        }
+        .percen-title{
+          padding-top: 20px;
+          font-size: 80px;
+          .text{
+            &:after{
+              font-size: 20px;
+            }
+          }
+        }
+      }
     }
   }
   .section-1{

@@ -32,7 +32,7 @@
 					bottom: 220px;
 				}
 				.beers-content{
-					width: 800px;
+					width: 700px;
 					height: 500px;	
 					// border: solid 1px #fff;
 					position: absolute;
@@ -61,7 +61,7 @@
 							z-index: 5;
 						}
 						&.pos-04{
-							left: 35%;
+							left: 36%;
 							bottom: -30px;
 							z-index: 8;
 						}
@@ -119,25 +119,23 @@
 							transform-origin: left bottom;
 							animation: beer-inverted-left 0.8s 1;
 							animation-fill-mode: forwards;
-							@include transform-bounceInDown( 
+							@include transform-inverted( 
 										'beer-inverted-left',
 										rotate(0deg),
 										rotate(-90deg),
-										rotate(-89deg),
-										rotate(-90deg),
-										rotate(-90deg));
+										rotate(-70deg),
+										rotate(-85deg));
 						}
 						&.inverted-right{
 							transform-origin: right bottom;
 							animation: beer-inverted-right 0.8s 1;
 							animation-fill-mode: forwards;
-							@include transform-bounceInDown( 
+							@include transform-inverted( 
 										'beer-inverted-right',
 										rotate(0deg),
 										rotate(90deg),
-										rotate(89deg),
-										rotate(90deg),
-										rotate(90deg));
+										rotate(70deg),
+										rotate(85deg));
 						}
 					}
 				}
@@ -201,7 +199,7 @@
 						color: #fff;
 						font-size: 14px;
 						letter-spacing: 1px;
-						background-color: #222;
+						background-color: rgba(#222,0.8);
 						position: absolute;
 					}
 				}

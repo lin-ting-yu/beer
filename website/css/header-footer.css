@@ -146,7 +146,6 @@
           background-color: #333; }
     .beer-comp-header .beer-section-step .section-scroll-text {
       display: block;
-      height: 0px;
       position: absolute;
       bottom: 0;
       right: 0;
@@ -154,9 +153,9 @@
       line-height: 12px;
       letter-spacing: 1px;
       font-size: 12px;
-      -webkit-transform-origin: 100% 0%;
-      -ms-transform-origin: 100% 0%;
-      transform-origin: 100% 0%;
+      -webkit-transform-origin: 100% 100%;
+      -ms-transform-origin: 100% 100%;
+      transform-origin: 100% 100%;
       -webkit-transform: rotate(90deg);
       -ms-transform: rotate(90deg);
       transform: rotate(90deg); }
@@ -184,7 +183,10 @@
         width: 30vh;
         height: 12px;
         vertical-align: top;
-        position: relative; }
+        position: relative;
+        -webkit-transform: translateY(100%);
+        -ms-transform: translateY(100%);
+        transform: translateY(100%); }
         .beer-comp-header .beer-section-step .section-scroll-text .text:before, .beer-comp-header .beer-section-step .section-scroll-text .text:after {
           display: block;
           content: '';
@@ -214,6 +216,8 @@
   -webkit-transition: opacity 0.5s;
   -o-transition: opacity 0.5s;
   transition: opacity 0.5s; }
+  body.isMobile .draw-icon {
+    display: none; }
   .draw-icon .draw-circle {
     width: 32px;
     height: 50px;
