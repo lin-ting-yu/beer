@@ -16,12 +16,23 @@
 	$header-padding-l-r-mobile: 30px;
 	$header-padding-t-b: 20px;
 	$header-padding-t-b-mobile: 20px;
+	$header-padding-l-r-mobile: 25px;
+	$header-padding-l-r-mobile-s: 10px;
+	$header-step-mobile-fz: 18px;
+	$header-step-mobile-s-fz: 12px;
+	$header-step-bottom: 20px;
 	.header-content{
 		font-size: 0;
 		position: relative;
 		padding: $header-padding-t-b $header-padding-l-r;
 		@media screen and (max-width: $screen-pad-l-size) {
 			padding: $header-padding-t-b $header-padding-l-r-mobile;
+		}
+		@media screen and (max-width: $screen-mobile-size){
+			padding: $header-padding-t-b $header-padding-l-r-mobile;
+		}
+		@media screen and (max-width: $screen-mobile-s-size){
+			padding: $header-padding-t-b $header-padding-l-r-mobile-s;
 		}
 		.header-logo{
 			width: 90px;
@@ -50,6 +61,12 @@
 			@media screen and (max-width: $screen-pad-l-size) {
 				right: $header-padding-l-r-mobile;
 			}
+			@media screen and (max-width: $screen-mobile-size){
+				right: $header-padding-l-r-mobile;
+			}
+			@media screen and (max-width: $screen-mobile-s-size){
+				right: $header-padding-l-r-mobile-s;
+			}
 			.header-mobile{
 				display: none;
 				.link-content{}
@@ -72,23 +89,28 @@
 					}
 					& + .header-li{
 						margin-left: 10px;
-						@media screen and (max-width: $screen-pad-l-size) {
-							// margin-left: 40px;
-						}
-						@media screen and (max-width: $screen-mobile-size) {
-							// margin-left: 30px;
-						}
 					}
 					&:last-child{
 						margin-right: -20px;
+						@media screen and (max-width: $screen-mobile-size){
+							margin-right: -10px;
+						}
 					}
 					.link-content{
 						display: inline-block;
 						position: relative;
 						padding: 10px 20px;
+						@media screen and (max-width: $screen-mobile-size){
+							padding: 10px;
+						}
 					}
 				}
 			}
+		}
+	}
+	.beer-step,.beer-section-step{
+		@media screen and (max-width: $screen-pad-s-size){
+			opacity: 0.7;
 		}
 	}
 	.beer-step{
@@ -99,6 +121,14 @@
 		@media screen and (max-width: $screen-pad-l-size) {
 			left: $header-padding-l-r-mobile;
 		}
+		@media screen and (max-width: $screen-pad-s-size){
+			left: auto;
+			right: $header-padding-l-r-mobile;
+			bottom: $header-step-bottom;
+		}
+		@media screen and (max-width: $screen-mobile-s-size){
+			right: $header-padding-l-r-mobile-s;
+		}
 		.beer-num{
 			display: inline-block;
 			vertical-align: bottom;
@@ -106,13 +136,68 @@
 			line-height: 1em;
 			letter-spacing: 1px;
 			font-weight: 300;
+			@media screen and (max-width: $screen-pad-s-size){
+				display: block;
+			}
+		}
+		.beer-now,.beer-all{
+			.text{
+				line-height: 1em;
+			}
 		}
 		.beer-now{
 			font-size: 70px;
+			line-height: 1em;
+			@media screen and (max-width: $screen-pad-s-size){
+				display: block;
+				font-size: $header-step-mobile-fz;
+				font-weight: 400;
+				text-align: center;
+			}
+			@media screen and (max-width: $screen-mobile-size){
+				font-size: $header-step-mobile-s-fz;
+			}
+			
 		}
 		.beer-all{
-			transform: translateY(-10px);
+			transform: translateY(-5px);
 			font-size: 30px;
+			padding-left: 15px;
+			position: relative;
+			&:before{
+				display: block;
+				content: '';
+				width: 1px;
+				height: 25px;
+				background-color: #000;
+				position: absolute;
+				left: 5px;
+				top: 50%;
+				transform: translateY(-50%) rotate(10deg);
+			}
+			@media screen and (max-width: $screen-pad-s-size){
+				display: block;
+				font-size: $header-step-mobile-fz;
+				font-weight: 400;
+				transform: translateY(0);
+				padding: 0;
+				&:before{
+					height: 15px;
+					background-color: #333;
+					position: relative;
+					left: 50%;
+					top: auto;
+					transform-origin: center center;
+					transform: translateX(-50%) rotate(10deg);
+				}
+			}
+			@media screen and (max-width: $screen-mobile-size){
+				font-size: $header-step-mobile-s-fz;
+				&:before{
+					margin-top: 5px;
+					margin-bottom: 5px;
+				}
+			}
 		}
 	}
 	.beer-section-step{
@@ -123,8 +208,21 @@
 		min-height: 50vh;
 		@media screen and (max-width: $screen-pad-l-size) {
 			right: $header-padding-l-r-mobile;
+			width: calc(100% - #{$header-padding-l-r-mobile});
+		}
+		@media screen and (max-width: $screen-pad-s-size){
+			bottom: $header-step-bottom;
+			min-height: 0;
+			text-align: right;
+		}
+		@media screen and (max-width: $screen-mobile-s-size){
+			right: $header-padding-l-r-mobile-s;
+			width: calc(100% - #{$header-padding-l-r-mobile-s});
 		}
 		.section-step{
+			@media screen and (max-width: $screen-pad-s-size){
+				display: none;
+			}
 			.section-ul{}
 			.section-li{
 				width: 7px;
@@ -201,39 +299,35 @@
 			letter-spacing: 1px;
 			font-size: 12px;
 			transform-origin: 100% 100%;
-			transform: rotate(90deg);
-			&:after{
-				display: block;
-				// content: '';
-				width: 0;
-				height: 12px;
-				opacity: 0.9;
-        		background-color: #eee;
-				position: absolute;
-				top: 0;
-				left: 0;
-				z-index: 2;
+			transform: rotate(90deg) translateY(100%);
+			@media screen and (max-width: $screen-pad-s-size){
+				display: inline-block;
+				max-width: calc(100% - 20px);
+				transform: rotate(0) translateX(-20px);
+				position: relative;
 			}
-			&.change{
-				&:after{
-					width: 100%;
-          			transition: width 0.2s ;
-				}
-			}
-			&.changed{
-		      &:after{
-					left: auto;
-					right: 0;
-					width: 0;
-		        }
-		    }
 			.text{
 				display: block;
 				width: 30vh;
 				height: 12px;
 				vertical-align: top;
 				position: relative;
-				transform: translateY(100%);
+				
+				@media screen and (max-width: $screen-pad-s-size){
+					width: auto;
+					height: auto;
+					transform: none;
+					font-size: 12px;
+					line-height: $header-step-mobile-fz;
+					padding-right: 50px;
+					padding-left: 50px;
+				}
+				@media screen and (max-width: $screen-mobile-size){
+					line-height: $header-step-mobile-s-fz;
+				}
+				@media screen and (max-width: $screen-mobile-s-size){
+					padding-left: 35px;
+				}
 				&:before, &:after{
 					display: block;
 					content: '';
@@ -247,10 +341,38 @@
 				&:before{
 					height: 60px;
 					transform: rotate(-90deg);
+					@media screen and (max-width: $screen-pad-s-size){
+						transform: none;
+						width: 4px;
+						height: 19px;
+						bottom: 5px;
+						right: auto;
+						left: $header-padding-l-r-mobile;
+						background-repeat: no-repeat;
+						background-color: transparent;
+						background-position: center bottom;
+						background-size: 100%;
+						background-image: url("../img/arrow-l-r-01.svg");
+					}
+					@media screen and (max-width: $screen-mobile-size){
+						bottom: 3px;
+					}
+					@media screen and (max-width: $screen-mobile-s-size){
+						left: $header-padding-l-r-mobile-s;
+					}
 				}
 				&:after{
 					height: 10px;
 					transform: rotate(-135deg);
+					@media screen and (max-width: $screen-pad-s-size){
+						display: inline-block;
+						height: 1px;
+						width: 40px;
+						bottom: 50%;
+						transform: none;
+						position: absolute;
+						bottom: 6px;
+					}
 				}
 			}
 		}

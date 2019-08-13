@@ -44,6 +44,9 @@
 				transform-origin: 50% 50% 50%;
 				transform: rotateY(-15deg) rotateX(-20deg);
 				transition: transform 1.2s , margin-top 1s;
+				@media (max-width: 575px){
+					padding: 30px 20px;
+				}
 			}
 			.modal-content{
 				box-shadow: 0 10px 30px -20px rgba(0,0,0,0.2);
@@ -73,16 +76,25 @@
 			.modal-header,.modal-body,.modal-footer{
 				padding: 20px 30px;
 				position: relative;
+				@media screen and (max-width: $screen-mobile-size){
+					padding: 10px 20px;
+				}
 			}
 			.modal-header{
 				flex-wrap: wrap;
 				padding-top: 30px;
+				@media screen and (max-width: $screen-mobile-size){
+					padding-top: 20px;
+				}
 				.modal-title{
 					text-align: center;
 					width: 100%;
 					display: block;
 					&.title{
 						font-size: 30px;
+						@media screen and (max-width: $screen-mobile-size){
+							font-size: 25px;
+						}
 					}
 					&.subtitle{
 						font-size: 16px;
@@ -94,9 +106,15 @@
 				font-size: 10px;
 				line-height: 1em;
 				padding-bottom: 50px;
+				@media screen and (max-width: $screen-mobile-size){
+					padding-bottom: 20px;
+				}
 			}
 			.modal-footer{
 				padding-bottom: 30px;
+				@media screen and (max-width: $screen-mobile-size){
+					padding-bottom: 20px;
+				}
 			}
 		}
 	}
@@ -112,6 +130,9 @@
 				opacity: 0;
 				transition: 1s;
 				text-align: center;
+				@media screen and (max-width: $screen-mobile-size){
+					width: 100%;
+				}
 				.title{
 					font-size: 30px;
 					letter-spacing: 1px;

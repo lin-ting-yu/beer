@@ -16,7 +16,9 @@
 #stats{
 	position: absolute;
 }
-body{
+html,body{
+	width: 100%;
+	height: 100%;
 	overflow: hidden;
 	line-height: 0;
 	font-size: 0;

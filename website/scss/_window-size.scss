@@ -211,9 +211,20 @@
 					bottom: 80px;
 					left: 50%;
 					transform: translateX(-50%);
+					///toggle :start;
+					&{
+						.text-content{
+							.toggle-content{
+								display: none;
+							}
+							.toggle-0{
+								display: inline-block;
+							}
+						}
+					}
 					&.toggle{
 						.text-content{
-							.toggle-0{
+							.toggle-content{
 								display: none;
 							}
 							.toggle-1{
@@ -221,13 +232,21 @@
 							}
 						}
 					}
+					&.toggle-2{
+						.text-content{
+							.toggle-content{
+								display: none;
+							}
+							.toggle-2{
+								display: inline-block;
+							}
+						}
+					}
+					///toggle :end;	
 					.text-content{
 						color: #fff;
 						font-size: 20px;
 						letter-spacing: 1px;
-						.toggle-1{
-							display: none;
-						}
 					}
 				}
 			}

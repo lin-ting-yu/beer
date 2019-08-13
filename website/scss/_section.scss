@@ -5,16 +5,60 @@
     width: 100%;
     max-width: 950px;
     padding: 0 25px;
-    opacity: 0;
     transition: opacity 0.5s;
     cursor: default;
     position: absolute;
     top: 50%;
     left: 50%;
     transform: translate(-50% , -50%);
-    @media screen and (max-width: $screen-pad-s-size){
-      body.isMobile &{
+    opacity: 0;
+    @media screen and (max-width: $screen-mobile-size){
+      padding: 0;
+    }
+    body.isMobile &{
+      @media screen and (max-width: $screen-pad-s-size){
+        min-height: 80%;
+        opacity: 0.1;
         position: relative;
+        top: auto;
+        left: auto;
+        transform: none;
+        &.section-2{
+          opacity: 0;
+        }
+        &.section-3{
+          min-height: 60%;
+        }
+      }
+    }
+    &.show{
+      opacity: 1 !important;
+    }
+    &.no-event,.no-event{
+      user-select: none;
+    }
+    &.change{
+      .change-effect-white{
+        &:before{
+          width: 100%;
+          transition: width 0.2s ;
+        }
+      }
+      .change-effect-fade{
+        opacity: 0;
+        transition: opacity 0.4s;
+      }
+    }
+    &.changed{
+      .change-effect-white{
+        &:before{
+          left: auto;
+          right: 0;
+          width: 0;
+        }
+      }
+      .change-effect-fade{
+        opacity: 1;
       }
     }
     .plus, .brackets{
@@ -81,12 +125,11 @@
     .content-section-info{
       position: relative;
       max-width: 50%;
-    }
-    &.no-event,.no-event{
-      user-select: none;
-    }
-    &.show{
-      opacity: 1;
+      body.isMobile &{
+        @media screen and (max-width: $screen-pad-s-size){
+          max-width: none;
+        }
+      }
     }
     .change-effect-white{
       position: relative;
@@ -105,33 +148,14 @@
     }
     .change-effect-fade{
     }
-    &.change{
-      .change-effect-white{
-        &:before{
-          width: 100%;
-          transition: width 0.2s ;
-        }
-      }
-      .change-effect-fade{
-        opacity: 0;
-        transition: opacity 0.4s;
-      }
-    }
-    &.changed{
-      .change-effect-white{
-        &:before{
-          left: auto;
-          right: 0;
-          width: 0;
-        }
-      }
-      .change-effect-fade{
-        opacity: 1;
-      }
-    }
   }
 // index-section
   .index-section{
+    body.isMobile &{
+      @media screen and (max-width: $screen-pad-s-size){
+        height: 100%;
+      }
+    }
     .plus{
       position: absolute;
       left: -30px;
@@ -140,6 +164,7 @@
       transform: rotate(90deg);
     }
     .section-title{
+      width: 100%;
       font-size: 80px;
       font-weight: bold;
       letter-spacing: 2px;
@@ -150,29 +175,44 @@
       @media screen and (max-width: $screen-pad-l-size){
         font-size: 70px;
       }
+      @media screen and (max-width: $screen-mobile-size){
+        font-size: 40px;
+        margin-bottom: 10px;
+      }
       &:after{
         display: block;
         width: 2em;
         height: 1px;
         content: '';
         background-color: #000;
+        @media screen and (max-width: $screen-pad-s-size){
+          margin-top: 10px;
+          opacity: 0.3;
+        }
       }
-      .text{}
     }
     .section-subtitle{
+      width: 100%;
       font-size: 16px;
       font-weight: bold;
       letter-spacing: 2px;
       margin-bottom: 40px;
       line-height: 1.8em;
       position: relative;
-      .text{}
+      @media screen and (max-width: $screen-pad-s-size){
+        margin-bottom: 60px;
+      }
+      @media screen and (max-width: $screen-mobile-size){
+        letter-spacing: 1px;
+        font-weight: normal;
+        font-size: 12px;
+        margin-bottom: 70px;
+      }
     }
     .section-content-text{
       font-size: 14px;
       letter-spacing: 2px;
       line-height: 1.5em;
-      .text{}
     }
     &.change{
       .plus{
@@ -209,6 +249,15 @@
       @media screen and (max-width: $screen-pad-l-size){
         font-size: 30px;
       }
+      @media screen and (max-width: $screen-pad-s-size){
+        max-width: 80%;
+        font-size: 50px;
+      }
+      @media screen and (max-width: $screen-mobile-size){
+        max-width: 100%;
+        font-size: 25px;
+        margin-bottom: 10px;
+      }
     }
     .section-subtitle{
       font-size: 18px;
@@ -223,6 +272,10 @@
           font-weight: normal;
         }
       }
+      @media screen and (max-width: $screen-mobile-size){
+        font-size: 16px;
+        font-weight: 600;
+      }
     }
     .section-content-text{
       font-size: 15px;
@@ -235,6 +288,23 @@
         letter-spacing: 0.5px;
         margin-bottom: 20px;
       }
+      @media screen and (max-width: $screen-pad-s-size){
+        font-size: 16px;
+        max-width: 70%;
+      }
+      @media screen and (max-width: $screen-mobile-size){
+        font-size: 12px;
+        max-width: 100%;
+      }
+    }
+    .beer-comp-item-list-1{
+      .item-list-1-ul{
+        .item-list-1-li{
+          @media screen and (max-width: $screen-mobile-size){
+            width: 100%;
+          }
+        }
+      }
     }
     .percen-title{
       padding-top: 40px;
@@ -242,14 +312,29 @@
       letter-spacing: 0;
       color: #555;
       font-weight: 100;
-      line-height: 1em;
+      line-height: 0.6em;
       text-align: right;
+      vertical-align: top;
+      @media screen and (max-width: $screen-mobile-size){
+        font-size: 70px;
+      }
+      @media screen and (max-width: $screen-mobile-s-size){
+        font-size: 50px;
+      }
       .text{
+        display: inline-block;
         &:after{
           display: inline-block;
           content: '%';
           font-size: 30px;
           font-weight: normal;
+          line-height: 0;
+          @media screen and (max-width: $screen-mobile-size){
+            font-size: 20px;
+          }
+          @media screen and (max-width: $screen-mobile-s-size){
+            font-size: 15px;
+          }
         }
       }
     }
@@ -291,18 +376,72 @@
         }
       }
     }
+    &.mobile-card{
+      @media screen and (max-width: $screen-pad-s-size){
+        min-height: 100%;
+        align-content: center;
+        align-items: center;
+      }
+      .content-section-info{
+        @media screen and (max-width: $screen-pad-s-size){
+          margin: 0;
+          background-color: rgba(#fff, 0.7);
+          padding: 50px 30px;
+          border-radius: 20px;
+          box-shadow: 0 30px 30px -20px rgba(0, 0, 0, 0.2);
+        }
+        @media screen and (max-width: $screen-mobile-size){
+          padding: 30px 20px;
+        }
+        .section-content-text{
+          @media screen and (max-width: $screen-pad-s-size){
+            margin-bottom: 100px;
+          }
+          @media screen and (max-width: $screen-mobile-size){
+            margin-bottom: 70px;
+          }
+        }
+        .percen-title{
+          @media screen and (max-width: $screen-pad-s-size){
+            padding: 0;
+            position: absolute;
+            right: 30px;
+            bottom: 50px;
+          }
+          @media screen and (max-width: $screen-mobile-size){
+            right: 20px;
+            bottom: 30px;
+          }
+        }
+      }
+    }
   }
   .section-1{
+    //容器寬度設定
     .content-section-info{
       margin-left: 70px;
       .section-subtitle{
         max-width: 340px;
       }
     }
+    @media screen and (max-width: $screen-pad-s-size){
+      .content-section-info{
+        display: flex;
+        flex-wrap: wrap;
+        align-content: flex-end;
+        align-items: flex-end;
+        margin: 0;
+
+        .section-subtitle{
+          max-width: none;
+        }
+      }
+    }
   }
   .section-2{
     display: flex;
     justify-content: flex-end;
+    //容器寬度設定
     .content-section-info{
       width: 100%;
       max-width: 400px;
@@ -314,16 +453,22 @@
     }
   }
   .section-3{
+    //容器寬度設定
     .content-section-info{
       max-width: 300px;
       @media screen and (max-width: $screen-pad-l-size) {
         max-width: 250px;
         margin-left: 30px;
       }
+      @media screen and (max-width: $screen-pad-s-size){
+        max-width: none;
+        margin: 0;
+      }
     }
-    .content-section-focus{
-      @media screen and (max-width: $screen-pad-l-size) {
-        margin-right: 30px;
+    @media screen and (max-width: $screen-pad-s-size){
+      align-items: flex-end;
+      .content-section-info{
+        padding-bottom: 50px;
       }
     }
     &.show{
@@ -351,6 +496,12 @@
       display: flex;
       flex: 1;
       position: relative;
+      @media screen and (max-width: $screen-pad-l-size) {
+        margin-right: 30px;
+      }
+      @media screen and (max-width: $screen-pad-s-size){
+        display: none;
+      }
       .plus,.brackets{
         position: absolute;
         opacity: 0;
@@ -364,6 +515,7 @@
         right: 50%;
       }
     }
+      
   }
 // 內頁list
   .beer-comp-item-list-1{
@@ -375,6 +527,9 @@
             width: 100%;
             &+.item-list-1-li{
               margin-top: 20px;
+              @media screen and (max-width: $screen-mobile-size){
+                margin-top: 12px;
+              }
             }
           }
         }
@@ -390,6 +545,18 @@
           &:nth-child(n+3){
             margin-top: 20px;
           }
+          @media screen and (max-width: $screen-pad-s-size){
+            display: block;
+            &+.item-list-1-li{
+              margin-top: 20px;
+            }
+          }
+          @media screen and (max-width: $screen-mobile-size){
+            width: 100%;
+            &+.item-list-1-li,&:nth-child(n+3){
+              margin-top: 12px;
+            }
+          }
           .list-title{
             font-size: 12px;
             color: #555;
@@ -399,11 +566,17 @@
             font-size: 16px;
             font-weight: bold;
             color: #333;
+            @media screen and (max-width: $screen-mobile-size){
+              font-size: 14px;
+            }
             .chart-list{
 
               .chart-ul{
                 font-size: 0;
                 padding: 5px 0px;
+                @media screen and (max-width: $screen-mobile-size){
+                  padding-bottom: 0;
+                }
                 .chart-li{
                   display: inline-block;
                   vertical-align: top;

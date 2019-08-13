@@ -16,7 +16,7 @@ function ajaxEvent(){
         dataType: "text",
         error: function (xhr) {
             console.log(xhr);
-        },      // 錯誤後執行的函數
+        },// 錯誤後執行的函數
         success: function (response) {
             window.beerData = $.parseJSON(response);
             $loadingHandle.keyDom = $($loadingHandle.key);
@@ -35,7 +35,8 @@ function bindingEvent(){
                     $textareaHandle,
                     $contactHandle,
                     $loadingHandle,
-                    $windowSizeHandle];
+                    $windowSizeHandle,
+                    $mobileScrollHandle];
     var _onResize    = [],
         _onScroll    = [],
         _onDraw      = [],
@@ -43,7 +44,8 @@ function bindingEvent(){
         _onMouseDown = [],
         _onMouseUp   = [],
         _onClick     = [],
-        _onWheel     = [];
+        _onWheel     = [],
+        _onRotate    = [];
     let _whellLength = 0,
         _whellFn = false;
     //判斷手機為body新增class
@@ -55,6 +57,7 @@ function bindingEvent(){
             o.keyDom = $(o.key);
             o.keyHas = o.keyDom.length > 0;
         }
+
         if(o.hasOwnProperty('initial')){
             o.initial();
         }
@@ -90,6 +93,10 @@ function bindingEvent(){
         if(o.hasOwnProperty('onClick')){
             _onClick.push(o);
         }
+        //判斷此物件是否有要onRotate的function
+        if(o.hasOwnProperty('onRotate')){
+            _onRotate.push(o);
+        }
     });
     //each動作
     function eachEvent(eventArray, eventName, booleanName, time, data, beforeFn){
@@ -110,11 +117,15 @@ function bindingEvent(){
     windowJquery.resize(function(){
         eachEvent(_onResize, 'onResize', 'isResize', 200, null,()=>{
             $windowData.width = windowJquery.outerWidth();
+            $windowData.oldInHeight = $windowData.inHeight;
             $windowData.inHeight = window.innerHeight;
+            isMobileContent = isMobile && $windowData.width <= 900;
+            $windowData.aspectRatio.old = $windowData.aspectRatio.now;
+            $windowData.aspectRatio.now = $windowData.inHeight / $windowData.width;
         });
     });
-    //scroll動作
-    windowJquery.on('mousewheel', function(event, delta, deltaX, deltaY) {
+    //wheel動作
+    $('body').on('mousewheel', function(event, delta, deltaX, deltaY) {
         if(!eventData.isWheel){
             _whellLength = 0;
             eventData.isWheel = true;
@@ -133,8 +144,7 @@ function bindingEvent(){
                 $.each(_onWheel,function(i,o){
                     o.onWheel(wheelType);
                 });
-            }
-                
+            }  
         }
         setTimeout(()=>{
             eventData.isWheel = false;
@@ -142,12 +152,25 @@ function bindingEvent(){
         },200);
         
     });
+    windowJquery.on('scroll',function(e){
+        eachEvent(_onScroll, 'onScroll', 'isScroll', 50);
+    });
+    //mousemove動作
     windowJquery.on('mousemove touchmove', function(e){
         eachEvent(_onMouseMove, 'onMouseMove', 'isMouseMove', 5, e,()=>{
             $windowData.mouseX = typeof e.pageX === 'number'? e.pageX: e.originalEvent.touches[0].pageX;
             $windowData.mouseY = typeof e.pageY === 'number'? e.pageY: e.originalEvent.touches[0].pageY;
+            if($windowData.mouseDownPos.x){
+                $windowData.mouseDownMoveLength.x = $windowData.mouseDownPos.x - $windowData.mouseX;
+                $windowData.mouseDownMoveLength.y = $windowData.mouseDownPos.y - $windowData.mouseY;
+            }
+            else{
+                $windowData.mouseDownMoveLength.x = null;
+                $windowData.mouseDownMoveLength.y = null;
+            }
         });  
     });
+    //mousedown動作
     windowJquery.on('mousedown touchstart', function(e){
         $windowData.mouseX = typeof e.pageX === 'number'? e.pageX: e.originalEvent.touches[0].pageX;
         $windowData.mouseY = typeof e.pageY === 'number'? e.pageY: e.originalEvent.touches[0].pageY;
@@ -157,6 +180,7 @@ function bindingEvent(){
         let timeStart = Date.now();
         $windowData.mouseDownPos.x = xPos;
         $windowData.mouseDownPos.y = yPos;
+        //mouseup動作
         windowJquery.off('mouseup touchend').on('mouseup touchend', function(e2){
             let xPosFn = $windowData.mouseX,
                 yPosFn = $windowData.mouseY;
@@ -165,22 +189,29 @@ function bindingEvent(){
             let timeEnd = Date.now() - timeStart;
             let xMoveLength = xPosFn - xPos,
                 yMoveLength = yPosFn - yPos;
+            let xMoveLengthAbs = Math.abs(xMoveLength),
+                yMoveLengthAbs = Math.abs(yMoveLength);
 
             let drawType = null;
-            if((timeEnd < 300 && Math.abs(xMoveLength) > 50) || Math.abs(xMoveLength) * 3 > $windowData.width){
-                if(xMoveLength > 0){
-                    drawType = 'left';
-                }
-                else{
-                    drawType = 'right';
+            //onDraw動作
+            if(xMoveLengthAbs > yMoveLengthAbs){
+                if((timeEnd < 300 && xMoveLengthAbs > 50) || xMoveLengthAbs * 3 > $windowData.width){
+                    if(xMoveLength > 0){
+                        drawType = 'left';
+                    }
+                    else{
+                        drawType = 'right';
+                    }
                 }
             }
-            else if((timeEnd < 300 && Math.abs(yMoveLength) > 50) || Math.abs(yMoveLength) * 3 > $windowData.height){
-                if(yMoveLength > 0){
-                    drawType = 'down';
-                }
-                else{
-                    drawType = 'up';
+            else{
+                if((timeEnd < 300 && yMoveLengthAbs > 50) || yMoveLengthAbs * 3 > $windowData.inHeight){
+                    if(yMoveLength > 0){
+                        drawType = 'up';
+                    }
+                    else{
+                        drawType = 'down';
+                    }
                 }
             }
             eachEvent(_onMouseUp, 'onMouseUp', 'isMouseUp', 50);
@@ -208,12 +239,21 @@ var eventData = {
 };
 var $windowData = { width:     windowJquery.outerWidth(),
                     inHeight:    window.innerHeight,
+                    oldInHeight: window.innerHeight,
+                    aspectRatio: {
+                        now: 0,
+                        old: 0
+                    },
                     scrollTop: windowJquery.scrollTop(),
                     mouseX: 0,
                     mouseY: 0,
-                    mouseDownPos:{x: null, y: null}
+                    mouseDownPos:{x: null, y: null},
+                    mouseDownMoveLength:{x: null, y: null}
                 };
-var isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry/i.test(navigator.userAgent);
+$windowData.aspectRatio.now = $windowData.aspectRatio.old = $windowData.inHeight / $windowData.width;
+let isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry/i.test(navigator.userAgent);
+    // isMobile = true;
+let isMobileContent = isMobile && $windowData.width <= 900;
 let beer;
 
 
@@ -229,21 +269,88 @@ const threeJsControlData = {
     oldActiveIndex: 0,
     mirror: 1,
     transformXing:false,
-    activePos: {
-        scale: 1.2,
-        x: -22,
-        y: -3,
-        z: 0,
-        itemGap: 30
+    bastSizeLimit:{
+        height: 800,
+        ratio: 0.625
     },
-    smallActivePos: {
-        scale: 0.5,
-        x: -30,
-        y: -5,
-        z: 0,
-        itemGap: 20
-    }
+    foodPosData:{
+        'larger900':
+                    {   scale:      1,
+                        position:{  x: -2,
+                                    y: 0,
+                                    z: 18},
+                        rotation:{  y: Math.PI + 0.3}
+                    },
+        'smaller900&larger480':
+                    {   scale:      1,
+                        position:{  x: 18,
+                                    y: 8,
+                                    z: 18},
+                        rotation:{  y: Math.PI + 1}
+                    },
+        'smaller480':
+                    {   scale:      0.8,
+                        position:{  x: 20,
+                                    y: 10,
+                                    z: 18},
+                        rotation:{  y: Math.PI + 1}
+                    },
+    },
+    windowActivePosData:{
+        'larger900':{
+            activePosSection1: {    scale:      1.2,
+                                    position:{  x: -22,
+                                                y: -3},
+                                    rotation:{  z: 0.5},
+                                    itemGap:    30 },
+            activePosSection2: 'activePosSection1',
+            activePosSection3: {    scale:      0.5,
+                                    position:{  x: -30,
+                                                y: -5},
+                                    rotation:{  z: 0.5},
+                                    itemGap:    20 }
+        },
+        'smaller900&larger480':{
+            activePosSection1: {    scale:      1,
+                                    position:{  x: 0,
+                                                y: 3},
+                                    rotation:{  z: 0.5},
+                                    itemGap:    30 },
+            activePosSection2: {    scale:      1.2,
+                                    position:{  x: 20,
+                                                y: 5},
+                                    rotation:{  z: 0.5},
+                                    itemGap:    50 },
+            activePosSection3: {    scale:      0.5,
+                                    position:{  x: -18,
+                                                y: -1},
+                                    rotation:{  z: 0.5},
+                                    itemGap:    20 }
+        },
+        'smaller480':{
+            activePosSection1: {    scale:      0.7,
+                                    position:{  x: 0,
+                                                y: 5},
+                                    rotation:{  z: 0.5},
+                                    itemGap:    30 },
+            activePosSection2: {    scale:      1.2,
+                                    position:{  x: 15,
+                                                y: 5},
+                                    rotation:{  z: 0.9},
+                                    itemGap:    50 },
+            activePosSection3: {    scale:      0.5,
+                                    position:{  x: -10,
+                                                y: 2},
+                                    rotation:{  z: 0.5},
+                                    itemGap:    20 }
+        }
+    },
+    activePos: null,
+    activePosSection2: null,
+    activePosSection3: null,
+    foodPos: null
 }
+
 const beerThreeData = [];
 //設定材質
 const materialObj = {
@@ -296,6 +403,40 @@ materialObj.textureCube.mapping = THREE.CubeRefractionMapping;
 
 
 //===========
+const $mobileScrollHandle = {
+    key: '.layout-content .layout-row',
+    onInnerScrollObjs:[],
+    scrollData:{
+        oldScrollTop: 0,
+        scrollTop: 0,
+        direction: 0
+    },
+    addEventList: function(obj, fns){
+        let data = {
+            obj: obj,
+            fns: fns
+        }
+        this.onInnerScrollObjs.push(data);
+    },
+    scrollTop: function(num){
+        this.keyDom.scrollTop(num);
+    },
+    onInnerScroll: function(data){
+        let self = $mobileScrollHandle;
+        self.scrollData.scrollTop    = this.scrollTop;
+        self.scrollData.direction    = self.scrollData.scrollTop - self.scrollData.oldScrollTop;
+        self.scrollData.oldScrollTop = this.scrollTop;
+        data.scrollData = self.scrollData;
+        self.onInnerScrollObjs.forEach(fnData => {
+            fnData.fns.forEach(fn=>{
+                fnData.obj[fn](data);
+            });
+        });
+    },
+    initial: function(){
+        this.keyDom.on('scroll',this.onInnerScroll);
+    }
+}
 const $windowSizeHandle = {
     key: '.beer-comp-window-size',
     keyBeers: null,
@@ -345,7 +486,6 @@ const $windowSizeHandle = {
                 if(beerPos.left <= 0){
                     beer.classList.add('inverted-right');
                     self.invertedBeer.push(beer);
-                    console.log(beer.classList)
                 }
                 else if(beerPos.right > $windowData.width){
                     beer.classList.add('inverted-left');
@@ -362,6 +502,9 @@ const $windowSizeHandle = {
         if(this.invertedBeer.length){
             this.keyPrompt.addClass('toggle');
         }
+        if(this.invertedBeer.length === this.keyBeers.length){
+            this.keyPrompt.addClass('toggle-2');
+        }
     },
     reset: function(){
         this.windowWidthSmall = false;
@@ -374,7 +517,7 @@ const $windowSizeHandle = {
         this.invertedBeer = [];
         this.keyArrow.height.removeClass('show');
         this.keyArrow.width.removeClass('show');
-        this.keyPrompt.removeClass('toggle');
+        this.keyPrompt.removeClass('toggle toggle-2');
     },
     handleAll: function(){
         if(isMobile){ return; }
@@ -402,7 +545,6 @@ const $windowSizeHandle = {
         this._initChildDOM();
         this.handleAll();
     }
-
 }
 const $loadingHandle = {
     key: '.beer-comp-loading',
@@ -571,6 +713,9 @@ const $textareaHandle = {
         textarea.style.height = '120px';
         fnHeight = textarea.scrollHeight > 120? textarea.scrollHeight:120
         textarea.style.height = fnHeight + 'px';
+    },
+    onResize: function(){
+        this.checkAllSize();
     },
     initial: function(){
         this._initChildDOM();
@@ -774,7 +919,7 @@ const $headerHandle = {
         this.nowBeerTextDOM = this.nowBeerDOM.find('.text');
     },
     beerStep: function(){
-        this.itemStepDOMChild.all.text('/' + (beerData.length));
+        this.itemStepDOMChild.all.text((beerData.length));
         this.itemStepDOMChild.now.text(threeJsControlData.activeIndex + 1);
     },
     beerSection: function(){
@@ -785,6 +930,7 @@ const $headerHandle = {
         this.keyNav = this.keyDom.find('.header-li');
     },
     keyNavEvent: function(){
+        if(isMobile){ return; }
         this.keyNav.on('mousedown',function(e){
             e.stopPropagation()
         });
@@ -820,10 +966,15 @@ const $headerHandle = {
 const $sectionHandle = {
     key: '.content-section',
     itemChanged: true,
-    itemMoving:false,
+    itemMoving: false,
+    HasMovingType: false,
     sectionChanged: true,
     sectionMoving:false,
     sectionActive:0,
+    nowSectionAn: null,
+    nowBeerAn: null,
+    nowFoodAn: null,
+    mobileScrolling: false,
     itemChangeData:{
         activeBeer: null,
         nextBeer: null,
@@ -834,10 +985,21 @@ const $sectionHandle = {
     cameraAn:{
         '180': null,
         '0'  : null,
-        'x => 100': null,
-        'x => -35': null
+        '-180': null,
+        '-0'  : null
     },
-    innerActivePos:threeJsControlData.activePos,
+    innerActivePos: null,
+    setInnerActivePos: function(){
+        if(this.sectionActive === 0){
+            this.innerActivePos = threeJsControlData.activePos;
+        }
+        else if(this.sectionActive === 1){
+            this.innerActivePos = threeJsControlData.activePosSection2;
+        }
+        else{
+            this.innerActivePos = threeJsControlData.activePosSection3;
+        }
+    },
     _compareData: function(DOM, data, key){
         let dataType = Object.prototype.toString.call(data);
         if(dataType === "[object Object]"){
@@ -907,67 +1069,102 @@ const $sectionHandle = {
                 
         });
     },
-    changeSection: function(num){
+    changeSection: function(num, important){
         if(!this.itemChanged || this.itemMoving){
             return;
         }
-        if(this.sectionChanged && this.sectionActive !== num){
+        if(((this.sectionChanged || isMobileContent) && this.sectionActive !== num) || important === true){
             this.sectionChanged = false;
             this.sectionMoving = true;
             let oldActive = this.sectionActive;
-            this.keyDom.eq(this.sectionActive).removeClass('show');
             this.sectionActive = num;
+            this.keyDom.eq(oldActive).removeClass('show');
             this.keyDom.eq(num).addClass('show');
             let self = this;
-            function sectionType(){
+            function sectionOnComplete(){
                 self.sectionChanged = true;
                 self.sectionMoving = false;
+                self.nowSectionAn = null;
+            }
+            function BeerOnComplete(){
+                self.nowBeerAn = null;
+            }
+            function foodOnComplete(){
+                self.nowFoodAn = null;
+            }
+            if(this.nowSectionAn){
+                this.nowSectionAn.stop();
+            }
+            if(this.nowBeerAn){
+                this.nowBeerAn.stop();
             }
             if(num === 0){
-                this.cameraAn['0']
-                    .easing(TWEEN.Easing.Quadratic.Out)
-                    .onComplete(sectionType)
-                    .start();
+                this.nowBeerAn = $threeHandle.carousel.beerSizeToDefault(this.itemChangeData.activeBeer,BeerOnComplete).start();
+                if(oldActive === 2){
+                    if(this.nowFoodAn){
+                        this.nowFoodAn.stop();
+                    }
+                    this.nowFoodAn = $threeHandle.carousel.hideFoodImg(this.itemChangeData.activeBeer,foodOnComplete).start();
+                }
+                this.nowSectionAn = this.cameraAn['0']
+                        .easing(TWEEN.Easing.Quadratic.Out)
+                        .onComplete(sectionOnComplete)
+                        .start();
+                this.setInnerActivePos();
                 threeJsControlData.mirror = 1;
             }
             else if(num === 1){
+                if(oldActive === 2 || isMobileContent){
+                    this.nowBeerAn = $threeHandle.carousel.beerSizeToSection2(this.itemChangeData.activeBeer,BeerOnComplete).start();
+                }
                 if(oldActive === 2){
-                    this.cameraAn['-180']
+                    this.nowSectionAn = this.cameraAn['-180']
                         .easing(TWEEN.Easing.Quadratic.Out)
-                        .onComplete(sectionType)
+                        .onComplete(sectionOnComplete)
                         .start();
-                    this.innerActivePos = threeJsControlData.activePos;
-                    $threeHandle.carousel.hideFoodImg(this.itemChangeData.activeBeer).start();
-                    $threeHandle.carousel.beerSizeReset(this.itemChangeData.activeBeer).start();
+                    if(this.nowFoodAn){
+                        this.nowFoodAn.stop();
+                    }
+                    this.nowFoodAn = $threeHandle.carousel.hideFoodImg(this.itemChangeData.activeBeer,foodOnComplete).start()
                 }
                 else{
-                    this.cameraAn['180']
+                    this.nowSectionAn = this.cameraAn['180']
                         .easing(TWEEN.Easing.Quadratic.Out)
-                        .onComplete(sectionType)
+                        .onComplete(sectionOnComplete)
                         .start();
                 }
+                this.setInnerActivePos();
                 threeJsControlData.mirror = -1;
             }
             else if(num === 2){
-                this.cameraAn['-0']
+                this.nowSectionAn = this.cameraAn['-0']
                     .easing(TWEEN.Easing.Quadratic.Out)
-                    .onComplete(sectionType)
+                    .onComplete(sectionOnComplete)
                     .start();
                 threeJsControlData.mirror = 1;
-                this.innerActivePos = threeJsControlData.smallActivePos;
-                $threeHandle.carousel.showFoodImg(this.itemChangeData.activeBeer).start();
-                $threeHandle.carousel.beerSizeToSmall(this.itemChangeData.activeBeer).start();
+                this.setInnerActivePos();
+                if(this.nowFoodAn){
+                    this.nowFoodAn.stop();
+                }
+                this.nowFoodAn = $threeHandle.carousel.showFoodImg(this.itemChangeData.activeBeer,foodOnComplete).start();
+                this.nowBeerAn = $threeHandle.carousel.beerSizeToSection3(this.itemChangeData.activeBeer,BeerOnComplete).start();
 
             }
             $headerHandle.beerSection();
+            console.log('4 changeSection fn' + num);
         }
+    },
+    resetSettion: function(){
+        this.stopAllAn();
+        $mobileScrollHandle.scrollTop(0);
+        this.changeSection(0, true);
     },
     _changeItemAn: function(bool){
         if(!this.itemChanged){
             this.itemChanged = true;
             this.itemMoving = true;
 
-            let acPosX = this.innerActivePos.x;
+            let acPosX = this.innerActivePos.position.x;
             let gep = this.innerActivePos.itemGap;
 
             threeJsControlData.activeIndex = this.itemChangeData.next;
@@ -1026,8 +1223,8 @@ const $sectionHandle = {
         }
         if (!this.itemChanged) {
             if ($windowData.mouseDownPos.x) {
-                let acPosX = this.innerActivePos.x;
-                let acPosY = this.innerActivePos.y;
+                let acPosX = this.innerActivePos.position.x;
+                let acPosY = this.innerActivePos.position.y;
                 let gep = this.innerActivePos.itemGap;
                 let scale = this.innerActivePos.scale;
 
@@ -1041,26 +1238,27 @@ const $sectionHandle = {
                 this.itemChangeData.activeBeer = beerThreeData[threeJsControlData.activeIndex];
                 this.itemChangeData.nextBeer = beerThreeData[this.itemChangeData.next];
                 beerThreeData[prev].transform('material', 'opacity', 0);
-                beerThreeData[prev].transform('position', 'x', 50);
+                beerThreeData[prev].transform('position', 'x', 100);
 
                 //判斷在哪個section 調整大小
                 function setScale(beer, type){
-                    beer.transform('scale', 'x', scale);
-                    beer.transform('scale', 'y', scale);
-                    beer.transform('scale', 'z', scale);
-                    beer.transform('position', 'y', acPosY);
-                    beer.size = type;
-                }
-
-                if(this.sectionActive === 2){
-                    if(this.itemChangeData.nextBeer.size === 'default'){
-                        setScale(this.itemChangeData.nextBeer, 'small');
+                    if(beer !== type){
+                        beer.transform('scale', 'x', scale);
+                        beer.transform('scale', 'y', scale);
+                        beer.transform('scale', 'z', scale);
+                        beer.transform('position', 'y', acPosY);
+                        beer.size = type;
                     }
+                        
+                }
+                if(this.sectionActive === 2){
+                    setScale(this.itemChangeData.nextBeer, 'section3');
+                }
+                else if(this.sectionActive === 1){
+                    setScale(this.itemChangeData.nextBeer, 'section2');
                 }
                 else{
-                    if(this.itemChangeData.nextBeer.size === 'small'){
-                        setScale(this.itemChangeData.nextBeer, 'default');
-                    }
+                    setScale(this.itemChangeData.nextBeer, 'default');
                 }
                 /////
                 let activeNewX = acPosX - moveDirection;
@@ -1077,24 +1275,79 @@ const $sectionHandle = {
             }
         }
     },
+    stopAllAn: function(){
+        if(this.nowSectionAn){
+            this.nowSectionAn.stop();
+            this.nowSectionAn = null;
+        }
+        if(this.nowBeerAn){
+            this.nowBeerAn.stop();
+            this.nowBeerAn = null;
+        }
+        if(this.nowFoodAn){
+            this.nowFoodAn.stop();
+            this.nowFoodAn = null;
+        }
+        if(this.sectionActive !== 2){
+            $threeHandle.carousel.hideFoodImg(this.itemChangeData.activeBeer).start();
+        }
+        self.sectionChanged = true;
+        self.sectionMoving = false;
+    },
+    onResize: function(){
+        this.setInnerActivePos();
+    },
     onMouseDown: function(){
         if($modalHandle.isModalOpen){ return }
-        if(!this.itemMoving){
+        if(!this.itemMoving && !isMobile){
             this.itemChanged = false;
         }
     },
     onClick: function(){
-        if(!this.itemMoving && !this.itemMoving){
+        if(!this.itemMoving){
             this.itemChanged = true;
         }
     },
-    onMouseUp: function(){},
+    onMouseUp: function(){
+        if(isMobile){
+            this.mobileScrolling = false;
+            this.HasMovingType = false;
+        }
+    },
     onMouseMove: function(e){
+        if(isMobile && !this.HasMovingType){
+            if($windowData.mouseDownMoveLength.y && Math.abs($windowData.mouseDownMoveLength.y) > 30){
+                this.mobileScrolling = true;
+                this.HasMovingType = true;
+                return;
+            }
+            if($windowData.mouseDownMoveLength.x && Math.abs($windowData.mouseDownMoveLength.x) > 30){
+                this.itemChanged = false;
+                this.HasMovingType = true;
+                return;
+            }
+        }
         this._drawChange();
+    },
+    handleSectionChangeEvent: function(type){
+        if($modalHandle.isModalOpen || isMobileContent){ return }
+        let num = type === 'down'? 1 : (type === 'up'? -1 : null);
+        let next = this.sectionActive + num;
+        if(next < 0 || next >= this.keyDom.length || num === null){
+            return null;
+        }
+        return next;
     },
     onDraw: function(type){
         let onNext = true;
-        if(this.itemChangeData.moveLength <= 0 || this.itemChangeData.next == null){
+        let nextSection = this.handleSectionChangeEvent(type);
+        if(isMobile){
+            if(typeof nextSection === 'number'){
+                console.log('onDraw','this.changeSection(nextSection);');
+                this.changeSection(nextSection);
+            }
+        }
+        if(this.itemChangeData.moveLength <= 0 || this.itemChangeData.next === null){
             return;
         }
         if(!this.itemChanged){
@@ -1110,23 +1363,84 @@ const $sectionHandle = {
         this._changeItemAn(onNext);
     },
     onWheel: function(type){
-        if($modalHandle.isModalOpen){ return }
-        let num = type === 'down'? 1 : -1;
-        let next = this.sectionActive + num;
-        if(next < 0 || next >= this.keyDom.length){
-            return
+        if(isMobile){ return; }
+        let next = this.handleSectionChangeEvent(type);
+        if(typeof next === 'number'){
+            console.log('onWheel','this.changeSection(next);');
+            this.changeSection(next);
         }
-        this.changeSection(next);
+    },
+    onScrollEvent: function(boolFn){
+        let active = null;
+        this.keyDom.each((i, o)=>{
+            if(i === self.sectionActive){
+                return;
+            }
+            if (boolFn(i, o)){
+                active = i;
+            }
+        });
+        if(active !== null){
+            console.log('this.changeSection(active);');
+            this.changeSection(active);
+        }
+    },
+    onScroll: function(scroll){
+        if(!isMobileContent){ return; }
+        let self = this;
+        let rangeHeight = $windowData.inHeight * 0.7;
+        let num = 3;
+        let inScroll = scroll.scrollData;
+        // console.log(inScroll);
+        if(inScroll.direction > 0){
+            this.onScrollEvent((i, o)=>{
+                let sectionPos = o.getBoundingClientRect();
+                return sectionPos.top <= rangeHeight;
+            });
+        }
+        else{
+            this.onScrollEvent((i, o)=>{
+                let sectionPos = o.getBoundingClientRect();
+                return sectionPos.bottom >= rangeHeight && sectionPos.bottom < $windowData.inHeight;
+            });
+        }
     },
     initial: function(){
+        this.innerActivePos = threeJsControlData.activePos;
         this.itemChangeData.activeBeer = beerThreeData[threeJsControlData.activeIndex];
         this._trunCarmraAn();
         this._changeItemContent();
+        $mobileScrollHandle.addEventList(this, ['onScroll']);
     }
 }
 const $threeHandle = {
     key: null,
     carousel: null,
+    windowSizeName: 'larger900',
+    oldWindowSizeName: '',
+    _initWindowActivePosData: function(){
+        for(let windowName in threeJsControlData.windowActivePosData){
+            let thisWindowName = threeJsControlData.windowActivePosData[windowName];
+            for(let section in thisWindowName){
+                let thisSection = thisWindowName[section];
+                if(typeof thisSection === 'string'){
+                    thisWindowName[section] = thisWindowName[thisSection];
+                }
+            }
+        }
+    },
+    _setWindowSizeName: function(){
+        this.oldWindowSizeName = this.windowSizeName;
+        if($windowData.width > 900){
+            this.windowSizeName = 'larger900';
+        }
+        else if($windowData.width <= 900 && $windowData.width > 480){
+            this.windowSizeName = 'smaller900&larger480';
+        }
+        else if($windowData.width <= 480){
+            this.windowSizeName = 'smaller480';
+        }
+    },
     _setThreeData: function(){
         beerData.forEach((beer, index) => {
             beerThreeData[index] = new Beer(beer);
@@ -1151,8 +1465,8 @@ const $threeHandle = {
             .rr()
             .rendererDOM(appendToDOM);
 
-        // let axes = new THREE.AxesHelper(20); // 參數為座標軸長度
-        // beer.scene.add(axes);
+        let axes = new THREE.AxesHelper(20); // 參數為座標軸長度
+        beer.scene.add(axes);
     },
     _threeJsRender: function() {
         beer.stats.update();
@@ -1164,9 +1478,105 @@ const $threeHandle = {
         beer.camera.position.y += (-threeJsControlData.mouseY - beer.camera.position.y) * 0.01;
         beer.camera.lookAt(beer.scene.position);
         beer.renderer.render(beer.scene, beer.camera);
-        // console.log(beer.camera.position);
-    }, 
+    },
+    handleThreeJsControlDataRatio: function(data){
+        let ratioMore = $windowData.aspectRatio.now > threeJsControlData.bastSizeLimit.ratio;
+        let afterTransformH = ratioMore? $windowData.width * threeJsControlData.bastSizeLimit.ratio: $windowData.inHeight;
+        let hMoreThan800 = afterTransformH > threeJsControlData.bastSizeLimit.height;
+        if($windowData.width > 900 && (hMoreThan800 || ratioMore)){
+            let ratio = 1;
+            if(ratioMore){
+                ratio *= afterTransformH / $windowData.inHeight;
+            }
+            if(hMoreThan800){
+                ratio *= threeJsControlData.bastSizeLimit.height / afterTransformH;
+            }
+            if(hMoreThan800 || ratioMore){
+                let result = deepForEach(data, 
+                                (result, key, val, obj)=>{
+                                    if(typeof val === 'number'){
+                                        result[key] = val * ratio;
+                                    }
+                                });
+                if(result.rotation){
+                    result.rotation = data.rotation;
+                }
+                return result;
+            }
+        }
+        else{
+            return data;
+        }
+    },
+    threeJsControlDataSetting: function(){
+        this._setWindowSizeName();
+        let nowPos = threeJsControlData.windowActivePosData[this.windowSizeName];
+        threeJsControlData.activePos = 
+            this.handleThreeJsControlDataRatio(nowPos.activePosSection1);
+        threeJsControlData.activePosSection2 = 
+            this.handleThreeJsControlDataRatio(nowPos.activePosSection2);
+        threeJsControlData.activePosSection3 = 
+            this.handleThreeJsControlDataRatio(nowPos.activePosSection3);
+        threeJsControlData.foodPos = 
+            this.handleThreeJsControlDataRatio(threeJsControlData.foodPosData[this.windowSizeName]);
+    },
+    resizeSetSetting: function(){
+        this.threeJsControlDataSetting();
+        if(     this.oldWindowSizeName      !== this.windowSizeName || 
+                $windowData.aspectRatio.now > threeJsControlData.bastSizeLimit.ratio  || 
+                $windowData.aspectRatio.old > threeJsControlData.bastSizeLimit.ratio  ||
+               ($windowData.inHeight !== $windowData.oldInHeight && 
+                Math.max($windowData.inHeight,$windowData.oldInHeight) > threeJsControlData.bastSizeLimit.height)
+            ){
+
+            let activeSection = $sectionHandle.sectionActive;
+            $sectionHandle.stopAllAn();
+            let activeName = activeSection === 0? 'activePos': (activeSection === 1? 'activePosSection2':'activePosSection3');
+            let bottle = this.carousel.items[0].objs[0];
+            this.carousel.items.forEach((item, index)=>{
+                let activeData = threeJsControlData[activeName];
+                for(let key in activeData){
+                    let beerPos = bottle[key];
+                    let changePos = activeData[key];
+                    if(beerPos){
+                        if(typeof changePos === 'object'){
+                            let childKeys = Object.keys(beerPos);
+                            for(let i = 0; i < childKeys.length; i++){
+                                let fnPos = changePos[childKeys[i]];
+                                if(fnPos !== undefined){
+                                    item.transform(key,childKeys[i],fnPos);
+                                }
+                            }
+                        }
+                        if(typeof changePos === 'number'){
+                            if(beerPos.set){
+                                item.objs.forEach((obj)=>{
+                                    obj[key].set(changePos,changePos,changePos);
+                                });
+                            }
+                        }
+                    }
+                }
+                if(index !== threeJsControlData.activeIndex){
+                    item.transform('position','x',100);
+                }
+                let foodChangePos = threeJsControlData.foodPos;
+                item.transform('position','x', foodChangePos.position.x, 'food');
+                item.transform('position','y', foodChangePos.position.y, 'food');
+                item.transform('position','z', foodChangePos.position.z, 'food');
+                item.transform('rotation','y', foodChangePos.rotation.y, 'food');
+                item.transform('scale', 'set', foodChangePos.scale, 'food');
+            });
+            if(isMobile){
+                $sectionHandle.setInnerActivePos();
+                $sectionHandle.resetSettion();
+            }
+        }
+    },
     initial: function(){
+        this._initWindowActivePosData();
+        this._setWindowSizeName();
+        this.threeJsControlDataSetting();
         this._setThreeData();
         this._createWord();
         this.carousel = new CarouselBeer(beer.scene, beerThreeData, threeJsControlData);
@@ -1188,6 +1598,7 @@ const $threeHandle = {
         beer.resize($windowData.width, $windowData.inHeight);
         threeJsControlData.mouseXPercen = 15 / $windowData.width;
         threeJsControlData.mouseYPercen = 15 / $windowData.inHeight;
+        this.resizeSetSetting();
     }
 }
 
@@ -1263,9 +1674,17 @@ const $threeHandle = {
         }
         transform(attr, axisOrNum, num, objs) {
             objs = objs === 'food'? this.foodImg: this.objs;
-            objs.forEach((obj) => {
-                obj[attr][axisOrNum] = num;
-            });
+            if(axisOrNum === 'set'){
+                objs.forEach((obj) => {
+                    obj[attr].set(num,num,num);
+                });
+            }
+            else{
+                objs.forEach((obj) => {
+                    obj[attr][axisOrNum] = num;
+                });
+            }
+                
         }
     }
     class CarouselBeer {
@@ -1279,23 +1698,22 @@ const $threeHandle = {
             this.items.forEach((item, index) => {
                 item.transform('material', 'opacity', 0);
                 item.transform('rotation', 'z', 0.5);
-                item.transform('position', 'y', threeJsControlData.activePos.y);
+                item.transform('position', 'y', threeJsControlData.activePos.position.y);
                 if(threeJsControlData.activePos.scale !== 1){
-                    item.transform('scale', 'x', threeJsControlData.activePos.scale);
-                    item.transform('scale', 'y', threeJsControlData.activePos.scale);
-                    item.transform('scale', 'z', threeJsControlData.activePos.scale);
+                    item.transform('scale', 'set', threeJsControlData.activePos.scale);
                 }
                 //food設定
                 item.transform('material', 'opacity', 0, 'food');
-                item.transform('position', 'x', -2, 'food');
-                item.transform('position', 'z', 18, 'food');
-                item.transform('rotation', 'y', Math.PI + 0.3, 'food');
-
+                item.transform('position', 'x', threeJsControlData.foodPos.position.x, 'food');
+                item.transform('position', 'y', threeJsControlData.foodPos.position.y, 'food');
+                item.transform('position', 'z', threeJsControlData.foodPos.position.z, 'food');
+                item.transform('rotation', 'y', threeJsControlData.foodPos.rotation.y, 'food');
+                item.transform('scale', 'set', threeJsControlData.foodPos.scale, 'food');
                 if (index === this.active.activeIndex) {
                     item.transform('material', 'opacity', 1);
-                    item.transform('position', 'x', threeJsControlData.activePos.x);
+                    item.transform('position', 'x', threeJsControlData.activePos.position.x);
                 } else {
-                    item.transform('position', 'x', 50);
+                    item.transform('position', 'x', 100);
                 }
                 item.addTo(this.scene);
             }, this);
@@ -1309,63 +1727,103 @@ const $threeHandle = {
                     beer.transform('material', 'opacity', anData.opacity);
                 });
         }
-        showFoodImg(beer){
-            let show = new TWEEN.Tween({opacity: 0})
+        showFoodImg(beer, onComplete){
+            let show = new TWEEN.Tween({opacity: beer.foodImg[0].material.opacity})
                         .to({opacity: 1,}, 500)
                         .easing(TWEEN.Easing.Quadratic.Out)
                         .onUpdate((opacity)=>{
                             beer.transform('material', 'opacity', opacity.opacity ,'food');
+                        })
+                        .onComplete(()=>{
+                            if(onComplete){
+                                onComplete();
+                            }
                         });
             return show;
                 
         }
-        hideFoodImg(beer){
-            let hide = new TWEEN.Tween({opacity: 1})
+        hideFoodImg(beer, onComplete){
+            let hide = new TWEEN.Tween({opacity: beer.foodImg[0].material.opacity})
                         .to({opacity: 0,}, 500)
                         .easing(TWEEN.Easing.Quadratic.Out)
                         .onUpdate((opacity)=>{
                             beer.transform('material', 'opacity', opacity.opacity ,'food');
+                        })
+                        .onComplete(()=>{
+                            if(onComplete){
+                                onComplete();
+                            }
                         });
             return hide;
         }
-        beerSizeToSmall(beer){
-            let toSmall = new TWEEN.Tween({ scale: threeJsControlData.activePos.scale, 
-                                                x: threeJsControlData.activePos.x,
-                                                y: threeJsControlData.activePos.y})
-                                .to({scale: threeJsControlData.smallActivePos.scale, 
-                                         x: threeJsControlData.smallActivePos.x,
-                                         y: threeJsControlData.smallActivePos.y}, 700)
-                                .easing(TWEEN.Easing.Quadratic.Out)
-                                .onUpdate((transform)=>{
-                                    beer.transform('position', 'x', transform.x);
-                                    beer.transform('position', 'y', transform.y);
-                                    beer.transform('scale', 'x', transform.scale);
-                                    beer.transform('scale', 'y', transform.scale);
-                                    beer.transform('scale', 'z', transform.scale);
-                                })
-                                .onComplete(()=>{
-                                    beer.size = 'small';
-                                });
+        createTween(beer, fnPosObj, time){
+            time = time || 700;
+            let obj = beer.objs[0];
+            let startPosObj = {};
+            let innerFnPosObj = {};
+            let callbackText = '';
+            for(let posName in fnPosObj){
+                let startPos = obj[posName];
+                let fnPos = fnPosObj[posName];
+                if(startPos){
+                    if(typeof startPos === 'object'){
+                        if(typeof fnPos === 'object'){
+                            for(let key in startPos){
+                                let keyName = posName + key;
+                                if(fnPos[key] !== undefined){
+                                    startPosObj[keyName] = startPos[key];
+                                    innerFnPosObj[keyName] = fnPos[key];
+                                    callbackText += "beer.transform('" + posName + "','" + key + "', transform." + keyName + ");";
+                                }
+                            }
+                        } 
+                        else if(typeof fnPos === 'number' && startPos.set){
+                            let keys = Object.keys(startPos);
+                            startPosObj[posName] = startPos[keys[0]];
+                            innerFnPosObj[posName] = fnPos;
+                            for(let i = 0; i < keys.length; i++){
+                                callbackText += "beer.transform('" + posName + "','" + keys[i] + "', transform." + posName + ");";
+                            }
+                        }
+                    }
+                }
+            }
+            let callbackFn = new Function(['beer','transform'], callbackText).bind(null, beer);
+            return new TWEEN.Tween(startPosObj)
+                                .to(innerFnPosObj, time)
+                                .onUpdate(callbackFn)
+        }
+        beerSizeToSection3(beer,onComplete){
+            let toSmall = this.createTween(beer, threeJsControlData.activePosSection3)
+                            .easing(TWEEN.Easing.Quadratic.Out)
+                            .onComplete(()=>{
+                                if(onComplete){
+                                    onComplete();
+                                }
+                                beer.size = 'section3';
+                            });
             return toSmall;
         }
-        beerSizeReset(beer){
-            let sizeReset = new TWEEN.Tween({scale: threeJsControlData.smallActivePos.scale, 
-                                                 x: threeJsControlData.smallActivePos.x,
-                                                 y: threeJsControlData.smallActivePos.y})
-                                .to({scale: threeJsControlData.activePos.scale, 
-                                         x: threeJsControlData.activePos.x,
-                                         y: threeJsControlData.activePos.y}, 700)
-                                .easing(TWEEN.Easing.Quadratic.Out)
-                                .onUpdate((transform)=>{
-                                    beer.transform('position', 'x', transform.x);
-                                    beer.transform('position', 'y', transform.y);
-                                    beer.transform('scale', 'x', transform.scale);
-                                    beer.transform('scale', 'y', transform.scale);
-                                    beer.transform('scale', 'z', transform.scale);
-                                })
-                                .onComplete(()=>{
-                                    beer.size = 'default';
-                                });
+        beerSizeToSection2(beer,onComplete){
+            let toSmall = this.createTween(beer, threeJsControlData.activePosSection2)
+                            .easing(TWEEN.Easing.Quadratic.Out)
+                            .onComplete(()=>{
+                                if(onComplete){
+                                    onComplete();
+                                }
+                                beer.size = 'section2';
+                            });
+            return toSmall;
+        }
+        beerSizeToDefault(beer,onComplete){
+            let sizeReset = this.createTween(beer, threeJsControlData.activePos)
+                                    .easing(TWEEN.Easing.Quadratic.Out)
+                                    .onComplete(()=>{
+                                        if(onComplete){
+                                            onComplete();
+                                        }
+                                        beer.size = 'default';
+                                    });
             return sizeReset;
         }
         getNext(num){
@@ -1493,7 +1951,18 @@ const $threeHandle = {
     function arrayRandom(array){
         return array[Math.floor(array.length * Math.random())];
     }
-    
+    function deepForEach(obj, callback){
+        let result = {}
+        for(let key in obj){
+            if(typeof obj[key] === 'object'){
+                result[key] = deepForEach(obj[key], callback);
+            }
+            else{
+                callback(result, key, obj[key], obj);
+            }
+        }
+        return result;
+    }
 //=============== tool: end ===============//
 
 
