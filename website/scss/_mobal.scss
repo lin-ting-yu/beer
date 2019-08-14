@@ -30,6 +30,7 @@
 			    display: none;
 			}
 			&.show{
+				display: flex !important;
 				.modal-dialog{
 					margin-top: 0;
 					transform: rotateY(0deg) rotateX(0deg);
@@ -37,6 +38,7 @@
 			}
 			.modal-dialog{
 				display: flex;
+				width: 100%;
 				align-items: center;
 				margin: auto;
 				margin-top: 200px;

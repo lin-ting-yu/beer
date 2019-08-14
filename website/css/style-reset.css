@@ -23,15 +23,19 @@ html, body {
   height: 100%;
   overflow: hidden;
   line-height: 0;
-  font-size: 0; }
+  font-size: 0;
+  -ms-overflow-style: none; }
 
+a,
 input:focus,
 select:focus,
 button:focus,
 span:focus {
   outline: none !important;
   -webkit-box-shadow: none;
-  box-shadow: none; }
+  box-shadow: none;
+  behavior: expression(this.onFocus=this.blur());
+  blr: expression(this.onFocus=this.blur()); }
 
 [class^="beer-comp-"] * {
   -webkit-box-sizing: border-box;
