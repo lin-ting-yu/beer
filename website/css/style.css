@@ -1763,7 +1763,47 @@ body.content-blur .draw-icon {
   .beer-comp-modal .modal .modal-body {
     font-size: 10px;
     line-height: 1em;
-    padding-bottom: 50px; }
+    padding-top: 5px;
+    padding-bottom: 5px; }
+    .beer-comp-modal .modal .modal-body .beer-form-content {
+      padding-bottom: 20px; }
+    .beer-comp-modal .modal .modal-body .modal-word-content {
+      max-height: 300px;
+      overflow-x: hidden;
+      overflow-y: auto;
+      border: solid 1px #ddd;
+      border-radius: 10px;
+      padding: 30px 20px;
+      padding-bottom: 50px; }
+      .beer-comp-modal .modal .modal-body .modal-word-content::-webkit-scrollbar {
+        width: 3px; }
+      .beer-comp-modal .modal .modal-body .modal-word-content::-webkit-scrollbar-track {
+        -webkit-border-radius: 10px;
+        border-radius: 10px; }
+      .beer-comp-modal .modal .modal-body .modal-word-content::-webkit-scrollbar-thumb {
+        -webkit-border-radius: 4px;
+        border-radius: 4px;
+        background: #999; }
+      .beer-comp-modal .modal .modal-body .modal-word-content .modal-word-section + .modal-word-section {
+        margin-top: 25px;
+        padding-top: 25px;
+        border-top: solid 1px #ddd; }
+      .beer-comp-modal .modal .modal-body .modal-word-content .title-content {
+        font-size: 25px;
+        font-weight: bold;
+        margin-bottom: 20px; }
+      .beer-comp-modal .modal .modal-body .modal-word-content .subtitle-content {
+        font-size: 16px;
+        font-weight: bold;
+        margin-bottom: 5px; }
+      .beer-comp-modal .modal .modal-body .modal-word-content .text-content {
+        font-size: 14px;
+        line-height: 1.8em; }
+        .beer-comp-modal .modal .modal-body .modal-word-content .text-content a {
+          color: #00B7FF;
+          text-decoration: underline; }
+        .beer-comp-modal .modal .modal-body .modal-word-content .text-content + .subtitle-content {
+          margin-top: 15px; }
     @media screen and (max-width: 480px) {
       .beer-comp-modal .modal .modal-body {
         padding-bottom: 20px; } }
