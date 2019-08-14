@@ -86,7 +86,7 @@
 				flex-wrap: wrap;
 				padding-top: 30px;
 				@media screen and (max-width: $screen-mobile-size){
-					padding-top: 20px;
+					padding-top: 30px;
 				}
 				.modal-title{
 					text-align: center;
@@ -94,6 +94,7 @@
 					display: block;
 					&.title{
 						font-size: 30px;
+						font-weight: bold;
 						@media screen and (max-width: $screen-mobile-size){
 							font-size: 25px;
 						}
@@ -109,8 +110,14 @@
 				line-height: 1em;
 				padding-top: 5px;
 				padding-bottom: 5px;
+				@media screen and (max-width: $screen-mobile-size){
+					padding-bottom: 20px;
+				}
 				.beer-form-content{
 					padding-bottom: 20px;
+					@media screen and (max-width: $screen-mobile-size){
+						padding-bottom: 0;
+					}
 				}
 				.modal-word-content{
 					max-height: 300px;
@@ -118,7 +125,7 @@
 					overflow-y: auto;
 					border: solid 1px #ddd;
 					border-radius: 10px;
-					padding: 30px 20px;
+					padding: 20px 20px;
 					padding-bottom: 50px;
 					&::-webkit-scrollbar {
 					    width: 3px;
@@ -133,28 +140,44 @@
 					    border-radius: 4px;
 					    background: #999;
 					}
+					@media screen and (max-width: $screen-mobile-size){
+						padding: 15px;
+					}
 					.modal-word-section{
 						& + .modal-word-section{
-							margin-top: 25px;
-							padding-top: 25px;
-							border-top: solid 1px #ddd;
+							padding-top: 35px;
+							@media screen and (max-width: $screen-mobile-size){
+								padding-top: 20px;
+							}
 						}
 					}
 					.title-content{
-						font-size:25px;
+						font-size: 22px;
 						font-weight: bold;
-						margin-bottom: 20px;
+						padding-bottom: 5px;
+						margin-bottom: 12px;
+						color: #333;
+						border-bottom: solid 1px #ddd;
+						@media screen and (max-width: $screen-mobile-size){
+							font-size: 20px;
+						}
 					}
 					.subtitle-content{
 						font-size: 16px;
-						font-weight: bold;
+						font-weight: 600;
 						margin-bottom: 5px;
+						color: #333;
+						@media screen and (max-width: $screen-mobile-size){
+							font-size: 14px;
+						}
 					}
 					.text-content{
-						font-size: 14px;
-						line-height: 1.8em;
+						color: #333;
+						font-size: 12px;
+						// line-height: 1.8em;
 						a{
 							color: #00B7FF;
+							color: #000;
 							text-decoration: underline;
 						}
 						&+.subtitle-content{
@@ -162,14 +185,12 @@
 						}
 					}
 				}	
-				@media screen and (max-width: $screen-mobile-size){
-					padding-bottom: 20px;
-				}
+				
 			}
 			.modal-footer{
 				padding-bottom: 30px;
 				@media screen and (max-width: $screen-mobile-size){
-					padding-bottom: 20px;
+					padding-bottom: 30px;
 				}
 			}
 		}
