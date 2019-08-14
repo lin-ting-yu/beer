@@ -79,7 +79,7 @@ function ajaxEvent() {
     });
 }
 function bindingEvent() {
-    var _initial = [$headerHandle, $modalHandle, $threeHandle, $sectionHandle, $drawIconHandle, $inputHandle, $textareaHandle, $contactHandle, $loadingHandle, $windowSizeHandle, $mobileScrollHandle];
+    var _initial = [$headerHandle, $modalHandle, $threeHandle, $sectionHandle, $drawIconHandle, $inputHandle, $textareaHandle, $contactHandle, $loadingHandle, $windowSizeHandle, $mobileScrollHandle, $tooltipHandle];
     var _onResize = [],
         _onScroll = [],
         _onDraw = [],
@@ -435,6 +435,67 @@ materialObj.textureCube.mapping = THREE.CubeRefractionMapping;
 
 
 //===========
+var $tooltipHandle = {
+    key: '.beer-comp-tooltip',
+    template: ' \n            <div class="beer-comp-tooltip">\n                <div class="tooltip-content">\n                    <div class="tooltip-info">\n                        <div class="left-content">\n                            <div class="img-content">\n                                <img src="" alt="" class="img" draggable="false">\n                            </div>\n                        </div>\n                        <div class="right-content">\n                            <div class="title-content">\n                                <span class="text"></span>\n                            </div>\n                            <div class="text-content">\n                                <span class="text"></span>\n                            </div>\n                        </div>\n                    </div>\n                    <div class="tooltip-arrow"></div>\n                </div>\n            </div>',
+    DOMsList: [],
+    hasOpen: false,
+    bindingEvent: function bindingEvent(jsDOM) {
+        var self = this;
+        var thisJsDOM = $(jsDOM);
+        thisJsDOM.on('click', function (e) {
+            self.closeAll();
+            e.stopPropagation();
+            e.preventDefault();
+            thisJsDOM.addClass('active');
+            self.handlePos($(this));
+            self.hasOpen = true;
+        });
+        this.DOMsList.push(thisJsDOM);
+    },
+    closeAll: function closeAll() {
+        if (this.hasOpen) {
+            this.DOMsList.forEach(function (DOM) {
+                DOM.removeClass('active');
+            });
+            this.hasOpen = false;
+        }
+    },
+    handlePos: function handlePos(DOM) {
+        var infoContent = DOM.find('.tooltip-content');
+        infoContent.css('margin-left', '');
+        var infoContentJs = infoContent.get(0);
+        var infoContentPos = infoContentJs.getBoundingClientRect();
+        var arrow = DOM.find('.tooltip-arrow');
+        arrow.css('margin-left', '');
+        if (infoContentPos.left < 20) {
+            var margin = 20 - infoContentPos.left;
+            infoContent.css('margin-left', margin + 'px');
+            arrow.css('margin-left', -margin + 'px');
+        } else if (infoContentPos.right - $windowData.width > 20) {
+            var _margin = infoContentPos.right - $windowData.width;
+            infoContent.css('margin-left', -_margin + 'px');
+            arrow.css('margin-left', _margin + 'px');
+        }
+    },
+    onResize: function onResize() {
+        if (this.hasOpen) {
+            var _self = this;
+            this.keyDom.each(function (_, DOM) {
+                _self.handlePos($(DOM));
+            });
+        }
+    },
+    onClick: function onClick() {
+        this.closeAll();
+    },
+    initial: function initial() {
+        var self = this;
+        this.keyDom.each(function (_, DOM) {
+            self.bindingEvent(DOM);
+        });
+    }
+};
 var $mobileScrollHandle = {
     key: '.layout-content .layout-row',
     onInnerScrollObjs: [],
@@ -951,7 +1012,8 @@ var $drawIconHandle = {
 };
 var $headerHandle = {
     key: '.beer-comp-header',
-    keyNav: null,
+    navDOM: null,
+    logoDOM: null,
     itemStepDOM: null,
     itemStepDOMChild: {
         all: null,
@@ -963,7 +1025,7 @@ var $headerHandle = {
     },
     nowBeerDOM: null,
     nowBeerTextDOM: null,
-    stepDOMInit: function stepDOMInit() {
+    childDOMInit: function childDOMInit() {
         this.itemStepDOM = this.keyDom.find('.beer-step');
         this.itemStepDOMChild.all = this.itemStepDOM.find('.beer-all .text');
         this.itemStepDOMChild.now = this.itemStepDOM.find('.beer-now .text');
@@ -973,6 +1035,9 @@ var $headerHandle = {
 
         this.nowBeerDOM = this.keyDom.find('.section-scroll-text');
         this.nowBeerTextDOM = this.nowBeerDOM.find('.text');
+
+        this.navDOM = this.keyDom.find('.header-li');
+        this.logoDOM = this.keyDom.find('.header-logo');
     },
     beerStep: function beerStep() {
         this.itemStepDOMChild.all.text(beerData.length);
@@ -982,22 +1047,26 @@ var $headerHandle = {
         this.sectionStepDOMChild.li.removeClass('active');
         this.sectionStepDOMChild.li.eq($sectionHandle.sectionActive).addClass('active');
     },
-    setkeyNav: function setkeyNav() {
-        this.keyNav = this.keyDom.find('.header-li');
-    },
-    keyNavEvent: function keyNavEvent() {
+    childrenEvent: function childrenEvent() {
         if (isMobile) {
             return;
         }
-        this.keyNav.on('mousedown', function (e) {
+        this.navDOM.on('mousedown', function (e) {
             e.stopPropagation();
-        });
-        this.keyNav.on('mouseenter', function (e) {
+        }).on('mouseenter', function (e) {
             $drawIconHandle.setTrackDOM(this);
             $drawIconHandle.setToUnderlindPos();
-        });
-        this.keyNav.on('mouseleave', function (e) {
+        }).on('mouseleave', function (e) {
             $drawIconHandle.removeUnderlindPos();
+        });
+
+        this.logoDOM.on('mouseenter', function (e) {
+            $drawIconHandle.setTrackDOM(this);
+            $drawIconHandle.setToUnderlindPos();
+            $drawIconHandle.keyDom.addClass('hide');
+        }).on('mouseleave', function (e) {
+            $drawIconHandle.removeUnderlindPos();
+            $drawIconHandle.keyDom.removeClass('hide');
         });
     },
     setNowBeerText: function setNowBeerText(text) {
@@ -1013,10 +1082,9 @@ var $headerHandle = {
         }, 210);
     },
     initial: function initial() {
-        this.stepDOMInit();
+        this.childDOMInit();
         this.beerStep();
-        this.setkeyNav();
-        this.keyNavEvent();
+        this.childrenEvent();
         this.setNowBeerText(beerData[threeJsControlData.activeIndex].content.section_1.title);
     },
     onResize: function onResize() {}
@@ -1047,6 +1115,61 @@ var $sectionHandle = {
         '-0': null
     },
     innerActivePos: null,
+    dataFunction: {
+        numToChart: {
+            numToChartListDOM: {},
+            fn: function fn(key, num) {
+                var innerKey = key + num;
+                if (this.numToChartListDOM[innerKey]) {
+                    return this.numToChartListDOM[innerKey];
+                }
+                var chart = $('<div class="chart-list">\n                                    <ul class="chart-ul">\n                                        <li class="chart-li"></li>\n                                        <li class="chart-li"></li>\n                                        <li class="chart-li"></li>\n                                        <li class="chart-li"></li>\n                                        <li class="chart-li"></li>\n                                    </ul>\n                                </div>');
+                var chartLi = chart.find('li');
+                if (num >= 1) {
+                    for (var i = 0; i < num; i++) {
+                        chartLi.eq(i).addClass('whole');
+                    }
+                }
+                if (num % 1 > 0) {
+                    chartLi.eq(Math.floor(num)).addClass('half');
+                }
+                this.numToChartListDOM[innerKey] = chart;
+                return chart;
+            }
+        },
+        tooltip: {
+            glasswareData: {
+                'tulip': {
+                    img: './img/glessware/glassware_tulip.svg',
+                    text: 'Its short stem facilitates swirling, further enhancing your sensory experience.'
+                },
+                'pint glass': {
+                    img: './img/glessware/glassware_pint-glass.svg',
+                    text: 'The pint glass’s basic design neither enhances nor seriously detracts from any particular beer style.'
+                }
+            },
+            glasswareDOM: {},
+            parent: null,
+            fn: function fn(key, type, DOM) {
+                var innertype = type.toLowerCase();
+                var innerKey = key + innertype;
+                var data = this.glasswareData[innertype];
+                var result = void 0;
+                if (this.glasswareDOM[innerKey]) {
+                    result = this.glasswareDOM[innerKey];
+                } else if (data) {
+                    result = $($tooltipHandle.template).find('.tooltip-content').clone();
+                    result.find('.title-content .text').text(type);
+                    result.find('.text-content .text').text(data.text);
+                    result.find('.img-content .img').attr('src', data.img);
+                    this.glasswareDOM[innerKey] = result;
+                }
+                this.parent.html(result);
+                return type;
+            }
+        }
+
+    },
     setInnerActivePos: function setInnerActivePos() {
         if (this.sectionActive === 0) {
             this.innerActivePos = threeJsControlData.activePos;
@@ -1066,7 +1189,7 @@ var $sectionHandle = {
             var changeDOM = DOM.find('[data-key="' + key + '"]');
             var dataFn = changeDOM.attr('data-fn');
             if (dataFn && dataFn !== '') {
-                changeDOM.html(window[dataFn](data));
+                changeDOM.html(this.dataFunction[dataFn].fn(key, data, changeDOM));
             } else {
                 changeDOM.text(data);
             }
@@ -1099,6 +1222,7 @@ var $sectionHandle = {
     _changeItemContent: function _changeItemContent() {
         var data = beerData[threeJsControlData.activeIndex].content;
         var self = this;
+        $tooltipHandle.closeAll();
         $headerHandle.setNowBeerText(data.section_1.title);
         this.keyDom.each(function (i, o) {
             var thisData = $(o);
@@ -1119,17 +1243,17 @@ var $sectionHandle = {
         }
         if ((this.sectionChanged || isMobileContent) && this.sectionActive !== num || important === true) {
             var sectionOnComplete = function sectionOnComplete() {
-                _self.sectionChanged = true;
-                _self.sectionMoving = false;
-                _self.nowSectionAn = null;
+                _self2.sectionChanged = true;
+                _self2.sectionMoving = false;
+                _self2.nowSectionAn = null;
             };
 
             var BeerOnComplete = function BeerOnComplete() {
-                _self.nowBeerAn = null;
+                _self2.nowBeerAn = null;
             };
 
             var foodOnComplete = function foodOnComplete() {
-                _self.nowFoodAn = null;
+                _self2.nowFoodAn = null;
             };
 
             this.sectionChanged = false;
@@ -1138,7 +1262,7 @@ var $sectionHandle = {
             this.sectionActive = num;
             this.keyDom.eq(oldActive).removeClass('show');
             this.keyDom.eq(num).addClass('show');
-            var _self = this;
+            var _self2 = this;
 
             if (this.nowSectionAn) {
                 this.nowSectionAn.stop();
@@ -1201,8 +1325,8 @@ var $sectionHandle = {
 
             threeJsControlData.activeIndex = this.itemChangeData.next;
             $headerHandle.beerStep();
-            var _self2 = this;
-            var prop = _self2.itemChangeData.moveLength / gep;
+            var _self3 = this;
+            var prop = _self3.itemChangeData.moveLength / gep;
             var speed = 900 - prop * 900;
             var activeOpacity = 1 - prop,
                 nextOpacity = prop;
@@ -1212,25 +1336,25 @@ var $sectionHandle = {
                 activeOpacity = _ref[0];
                 nextOpacity = _ref[1];
             }
-            $threeHandle.carousel.turnAnimation({ x: _self2.itemChangeData.activeBeer.objs[0].position.x,
-                opacity: activeOpacity }, { x: acPosX + gep * _self2.itemChangeData.num * threeJsControlData.mirror,
-                opacity: 0 }, speed, _self2.itemChangeData.activeBeer).onStart(function () {
-                if (change && _self2.sectionActive === 2) {
-                    $threeHandle.carousel.hideFoodImg(_self2.itemChangeData.activeBeer).start();
+            $threeHandle.carousel.turnAnimation({ x: _self3.itemChangeData.activeBeer.objs[0].position.x,
+                opacity: activeOpacity }, { x: acPosX + gep * _self3.itemChangeData.num * threeJsControlData.mirror,
+                opacity: 0 }, speed, _self3.itemChangeData.activeBeer).onStart(function () {
+                if (change && _self3.sectionActive === 2) {
+                    $threeHandle.carousel.hideFoodImg(_self3.itemChangeData.activeBeer).start();
                 }
             }).onComplete(function () {
-                _self2.itemChangeData.next = null;
+                _self3.itemChangeData.next = null;
                 threeJsControlData.oldActiveIndex = threeJsControlData.activeIndex;
-                _self2.itemMoving = false;
+                _self3.itemMoving = false;
             }).start();
-            $threeHandle.carousel.turnAnimation({ x: _self2.itemChangeData.nextBeer.objs[0].position.x,
+            $threeHandle.carousel.turnAnimation({ x: _self3.itemChangeData.nextBeer.objs[0].position.x,
                 opacity: nextOpacity }, { x: acPosX,
-                opacity: 1 }, speed, _self2.itemChangeData.nextBeer).onStart(function () {
-                if (change && _self2.sectionActive === 2) {
-                    $threeHandle.carousel.showFoodImg(_self2.itemChangeData.nextBeer).start();
+                opacity: 1 }, speed, _self3.itemChangeData.nextBeer).onStart(function () {
+                if (change && _self3.sectionActive === 2) {
+                    $threeHandle.carousel.showFoodImg(_self3.itemChangeData.nextBeer).start();
                 }
             }).onComplete(function () {
-                _self2.itemChangeData.activeBeer = beerThreeData[threeJsControlData.activeIndex];
+                _self3.itemChangeData.activeBeer = beerThreeData[threeJsControlData.activeIndex];
             }).start();
             if (change) {
                 this._changeItemContent();
@@ -1434,6 +1558,15 @@ var $sectionHandle = {
         }
     },
     initial: function initial() {
+        var _this9 = this;
+
+        this.keyDom.each(function (i, o) {
+            var thisDOM = $(o);
+            if (thisDOM.hasClass('section-3')) {
+                _this9.dataFunction.tooltip.parent = thisDOM.find('.beer-comp-tooltip');
+            }
+        });
+
         this.innerActivePos = threeJsControlData.activePos;
         this.itemChangeData.activeBeer = beerThreeData[threeJsControlData.activeIndex];
         this._trunCarmraAn();
@@ -1478,8 +1611,8 @@ var $threeHandle = {
         beer.scene.background = materialObj.textureCube;
         beer.setCamera(60, window.innerWidth / window.innerHeight, 0.1, 2000, new THREE.Vector3(50, 10, -45), false).setStats(document.getElementById('stats')).addLight('AmbientLight', 'AmbientLight', 0x999999).addLight('PointLight1', 'PointLight', 0xffffff, new THREE.Vector3(50, 150, -150)).addLight('PointLight2', 'PointLight', 0xffffff, new THREE.Vector3(50, 150, 150)).addLight('PointLight3', 'PointLight', 0x222222, new THREE.Vector3(-500, -300, 0)).rr().rendererDOM(appendToDOM);
 
-        var axes = new THREE.AxesHelper(20); // 參數為座標軸長度
-        beer.scene.add(axes);
+        // let axes = new THREE.AxesHelper(20); // 參數為座標軸長度
+        // beer.scene.add(axes);
     },
     _threeJsRender: function _threeJsRender() {
         beer.stats.update();
@@ -1725,7 +1858,7 @@ var CarouselBeer = function () {
     _createClass(CarouselBeer, [{
         key: 'init',
         value: function init() {
-            var _this9 = this;
+            var _this10 = this;
 
             this.items.forEach(function (item, index) {
                 item.transform('material', 'opacity', 0);
@@ -1741,13 +1874,13 @@ var CarouselBeer = function () {
                 item.transform('position', 'z', threeJsControlData.foodPos.position.z, 'food');
                 item.transform('rotation', 'y', threeJsControlData.foodPos.rotation.y, 'food');
                 item.transform('scale', 'set', threeJsControlData.foodPos.scale, 'food');
-                if (index === _this9.active.activeIndex) {
+                if (index === _this10.active.activeIndex) {
                     item.transform('material', 'opacity', 1);
                     item.transform('position', 'x', threeJsControlData.activePos.position.x);
                 } else {
                     item.transform('position', 'x', 100);
                 }
-                item.addTo(_this9.scene);
+                item.addTo(_this10.scene);
             }, this);
         }
     }, {
@@ -1964,19 +2097,6 @@ function loadingObj(beerData, callback) {
     }
     innerLoadingObj(index);
 }
-function numToChart(num) {
-    var chart = $('<div class="chart-list">\n                            <ul class="chart-ul">\n                                <li class="chart-li"></li>\n                                <li class="chart-li"></li>\n                                <li class="chart-li"></li>\n                                <li class="chart-li"></li>\n                                <li class="chart-li"></li>\n                            </ul>\n                        </div>');
-    var chartLi = chart.find('li');
-    if (num >= 1) {
-        for (var i = 0; i < num; i++) {
-            chartLi.eq(i).addClass('whole');
-        }
-    }
-    if (num % 1 > 0) {
-        chartLi.eq(Math.floor(num)).addClass('half');
-    }
-    return chart;
-}
 function CteatrEasing(x1, y1, x2, y2) {
     return function (t) {
         return bezier_point(t, [0, 0], [x1, y1], [x2, y2], [1, 1])[1];
@@ -2043,7 +2163,6 @@ function detectIE(obj) {
         obj.notIE();
     }
 }
-
 function getInclude(url, _success, _error) {
     $.ajax({
         url: url, // url位置

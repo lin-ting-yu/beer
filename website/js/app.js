@@ -83,7 +83,8 @@ function bindingEvent(){
                     $contactHandle,
                     $loadingHandle,
                     $windowSizeHandle,
-                    $mobileScrollHandle];
+                    $mobileScrollHandle,
+                    $tooltipHandle];
     var _onResize    = [],
         _onScroll    = [],
         _onDraw      = [],
@@ -450,6 +451,88 @@ materialObj.textureCube.mapping = THREE.CubeRefractionMapping;
 
 
 //===========
+const $tooltipHandle = {
+    key:'.beer-comp-tooltip',
+    template:` 
+            <div class="beer-comp-tooltip">
+                <div class="tooltip-content">
+                    <div class="tooltip-info">
+                        <div class="left-content">
+                            <div class="img-content">
+                                <img src="" alt="" class="img" draggable="false">
+                            </div>
+                        </div>
+                        <div class="right-content">
+                            <div class="title-content">
+                                <span class="text"></span>
+                            </div>
+                            <div class="text-content">
+                                <span class="text"></span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="tooltip-arrow"></div>
+                </div>
+            </div>`,
+    DOMsList:[],
+    hasOpen: false,
+    bindingEvent: function(jsDOM){
+        let self = this;
+        let thisJsDOM = $(jsDOM);
+        thisJsDOM.on('click', function(e){
+            self.closeAll();
+            e.stopPropagation();
+            e.preventDefault();
+            thisJsDOM.addClass('active');
+            self.handlePos($(this));
+            self.hasOpen = true;
+        });
+        this.DOMsList.push(thisJsDOM);
+    },
+    closeAll: function(){
+        if(this.hasOpen){
+            this.DOMsList.forEach(DOM=>{
+                DOM.removeClass('active');
+            });
+            this.hasOpen = false;
+        }
+    },
+    handlePos: function(DOM){
+        let infoContent = DOM.find('.tooltip-content');
+        infoContent.css('margin-left','');
+        let infoContentJs = infoContent.get(0);
+        let infoContentPos = infoContentJs.getBoundingClientRect();
+        let arrow = DOM.find('.tooltip-arrow');
+        arrow.css('margin-left','');
+        if(infoContentPos.left < 20){
+            let margin = 20 - infoContentPos.left;
+            infoContent.css('margin-left', margin + 'px');
+            arrow.css('margin-left', -margin + 'px');
+        }
+        else if(infoContentPos.right - $windowData.width > 20){
+            let margin = infoContentPos.right - $windowData.width;
+            infoContent.css('margin-left', -margin + 'px');
+            arrow.css('margin-left', margin + 'px');
+        }
+    },
+    onResize: function(){
+        if(this.hasOpen){
+            let self = this;
+            this.keyDom.each((_, DOM)=>{
+                self.handlePos($(DOM));
+            });
+        }
+    },
+    onClick: function(){
+        this.closeAll();
+    },
+    initial: function(){
+        let self = this;
+        this.keyDom.each((_, DOM)=>{
+            self.bindingEvent(DOM);
+        });
+    }
+}
 const $mobileScrollHandle = {
     key: '.layout-content .layout-row',
     onInnerScrollObjs:[],
@@ -942,7 +1025,8 @@ const $drawIconHandle = {
 };
 const $headerHandle = {
     key:'.beer-comp-header',
-    keyNav: null,
+    navDOM: null,
+    logoDOM:null,
     itemStepDOM: null,
     itemStepDOMChild:{
         all: null,
@@ -954,7 +1038,7 @@ const $headerHandle = {
     },
     nowBeerDOM: null,
     nowBeerTextDOM: null,
-    stepDOMInit: function(){
+    childDOMInit: function(){
         this.itemStepDOM = this.keyDom.find('.beer-step');
         this.itemStepDOMChild.all = this.itemStepDOM.find('.beer-all .text');
         this.itemStepDOMChild.now = this.itemStepDOM.find('.beer-now .text');
@@ -964,6 +1048,9 @@ const $headerHandle = {
 
         this.nowBeerDOM = this.keyDom.find('.section-scroll-text');
         this.nowBeerTextDOM = this.nowBeerDOM.find('.text');
+
+        this.navDOM = this.keyDom.find('.header-li');
+        this.logoDOM = this.keyDom.find('.header-logo');
     },
     beerStep: function(){
         this.itemStepDOMChild.all.text((beerData.length));
@@ -973,21 +1060,30 @@ const $headerHandle = {
         this.sectionStepDOMChild.li.removeClass('active');
         this.sectionStepDOMChild.li.eq($sectionHandle.sectionActive).addClass('active');
     },
-    setkeyNav: function(){
-        this.keyNav = this.keyDom.find('.header-li');
-    },
-    keyNavEvent: function(){
+    childrenEvent: function(){
         if(isMobile){ return; }
-        this.keyNav.on('mousedown',function(e){
-            e.stopPropagation()
-        });
-        this.keyNav.on('mouseenter',function(e){
-            $drawIconHandle.setTrackDOM(this);
-            $drawIconHandle.setToUnderlindPos();
-        });
-        this.keyNav.on('mouseleave',function(e){
-            $drawIconHandle.removeUnderlindPos();
-        });
+        this.navDOM
+            .on('mousedown',function(e){
+                e.stopPropagation();
+            })
+            .on('mouseenter',function(e){
+                $drawIconHandle.setTrackDOM(this);
+                $drawIconHandle.setToUnderlindPos();
+            })
+            .on('mouseleave',function(e){
+                $drawIconHandle.removeUnderlindPos();
+            });
+
+        this.logoDOM
+            .on('mouseenter',function(e){
+                $drawIconHandle.setTrackDOM(this);
+                $drawIconHandle.setToUnderlindPos();
+                $drawIconHandle.keyDom.addClass('hide');
+            })
+            .on('mouseleave',function(e){
+                $drawIconHandle.removeUnderlindPos();
+                $drawIconHandle.keyDom.removeClass('hide');
+            });
     },
     setNowBeerText: function(text){
         this.nowBeerDOM.addClass('change');
@@ -1001,10 +1097,9 @@ const $headerHandle = {
         
     },
     initial: function(){
-        this.stepDOMInit();
+        this.childDOMInit();
         this.beerStep();
-        this.setkeyNav();
-        this.keyNavEvent();
+        this.childrenEvent();
         this.setNowBeerText(beerData[threeJsControlData.activeIndex].content.section_1.title);
         
     },
@@ -1036,6 +1131,72 @@ const $sectionHandle = {
         '-0'  : null
     },
     innerActivePos: null,
+    dataFunction: {
+        numToChart:{
+            numToChartListDOM:{},
+            fn: function(key, num){
+                let innerKey = key + num;
+                if(this.numToChartListDOM[innerKey]){
+                    return this.numToChartListDOM[innerKey];
+                }
+                let chart =    $(`<div class="chart-list">
+                                    <ul class="chart-ul">
+                                        <li class="chart-li"></li>
+                                        <li class="chart-li"></li>
+                                        <li class="chart-li"></li>
+                                        <li class="chart-li"></li>
+                                        <li class="chart-li"></li>
+                                    </ul>
+                                </div>`);
+                let chartLi = chart.find('li');
+                if(num >= 1){
+                   for(let i = 0; i < num; i++){
+                        chartLi.eq(i).addClass('whole');
+                    } 
+                }
+                if(num % 1 > 0){
+                    chartLi.eq(Math.floor(num)).addClass('half');
+                }
+                this.numToChartListDOM[innerKey] = chart;
+                return chart;
+            }
+        },
+        tooltip:{
+            glasswareData:{
+                'tulip':{
+                    img: './img/glessware/glassware_tulip.svg',
+                    text: 'Its short stem facilitates swirling, further enhancing your sensory experience.'
+                },
+                'pint glass':{
+                    img: './img/glessware/glassware_pint-glass.svg',
+                    text: 'The pint glass’s basic design neither enhances nor seriously detracts from any particular beer style.'
+                }
+            },
+            glasswareDOM:{},
+            parent: null,
+            fn: function(key, type, DOM){
+                let innertype = type.toLowerCase();
+                let innerKey = key + innertype;
+                let data = this.glasswareData[innertype];
+                let result;
+                if(this.glasswareDOM[innerKey]){
+                    result = this.glasswareDOM[innerKey];
+                }
+                else if(data){
+                    result = $($tooltipHandle.template)
+                                .find('.tooltip-content')
+                                .clone();
+                    result.find('.title-content .text').text(type);
+                    result.find('.text-content .text').text(data.text);
+                    result.find('.img-content .img').attr('src', data.img);
+                    this.glasswareDOM[innerKey] = result;
+                }
+                this.parent.html(result);
+                return type;
+            }
+        }
+            
+    },
     setInnerActivePos: function(){
         if(this.sectionActive === 0){
             this.innerActivePos = threeJsControlData.activePos;
@@ -1059,7 +1220,7 @@ const $sectionHandle = {
             let changeDOM = DOM.find('[data-key="' + key + '"]');
             let dataFn = changeDOM.attr('data-fn');
             if(dataFn && dataFn !== ''){
-                changeDOM.html(window[dataFn](data));
+                changeDOM.html(this.dataFunction[dataFn].fn(key, data, changeDOM));
             }
             else{
                 changeDOM.text(data);
@@ -1101,6 +1262,7 @@ const $sectionHandle = {
     _changeItemContent: function(){
         let data = beerData[threeJsControlData.activeIndex].content;
         let self = this;
+        $tooltipHandle.closeAll();
         $headerHandle.setNowBeerText(data.section_1.title);
         this.keyDom.each(function(i,o){
             let thisData = $(o);
@@ -1453,6 +1615,13 @@ const $sectionHandle = {
         }
     },
     initial: function(){
+        this.keyDom.each((i, o)=>{
+            let thisDOM = $(o)
+            if(thisDOM.hasClass('section-3')){
+                this.dataFunction.tooltip.parent = thisDOM.find('.beer-comp-tooltip');
+            }
+        });
+        
         this.innerActivePos = threeJsControlData.activePos;
         this.itemChangeData.activeBeer = beerThreeData[threeJsControlData.activeIndex];
         this._trunCarmraAn();
@@ -1512,8 +1681,8 @@ const $threeHandle = {
             .rr()
             .rendererDOM(appendToDOM);
 
-        let axes = new THREE.AxesHelper(20); // 參數為座標軸長度
-        beer.scene.add(axes);
+        // let axes = new THREE.AxesHelper(20); // 參數為座標軸長度
+        // beer.scene.add(axes);
     },
     _threeJsRender: function() {
         beer.stats.update();
@@ -1959,27 +2128,6 @@ const $threeHandle = {
       }
       innerLoadingObj(index);
     }
-    function numToChart(num){
-        let chart =    $(`<div class="chart-list">
-                            <ul class="chart-ul">
-                                <li class="chart-li"></li>
-                                <li class="chart-li"></li>
-                                <li class="chart-li"></li>
-                                <li class="chart-li"></li>
-                                <li class="chart-li"></li>
-                            </ul>
-                        </div>`);
-        let chartLi = chart.find('li');
-        if(num >= 1){
-           for(let i = 0; i < num; i++){
-                chartLi.eq(i).addClass('whole');
-            } 
-        }
-        if(num % 1 > 0){
-            chartLi.eq(Math.floor(num)).addClass('half');
-        }
-        return chart;
-    }
     function CteatrEasing(x1, y1, x2, y2){
         return function(t){
             return bezier_point(t, [0,0], [x1, y1], [x2, y2], [1,1])[1];
@@ -2053,7 +2201,6 @@ const $threeHandle = {
             obj.notIE()
         }
     }
-
     function getInclude(url, success, error){
         $.ajax({
             url: url,   // url位置

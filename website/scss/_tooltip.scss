@@ -1,0 +1,100 @@
+
+
+
+
+
+.beer-comp-tooltip{
+  margin: 0 3px;
+  display: inline-block;
+  vertical-align: middle;
+  width: 13px;
+  height: 13px;
+  position: relative;
+  border-radius: 50%;
+  border: solid 1px #333;
+  cursor: pointer;
+  &:before{
+    display: block;
+    content: '？';
+    font-size: 12px;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%) scale(0.8);
+  }
+  &.active{
+    .tooltip-content{
+      display: flex;
+    }
+  }
+  .tooltip-content{
+    display: none;
+    width: calc(100vw - 25px);
+    max-width: 350px;
+    position: absolute;
+    left: 50%;
+    top: 0;
+    transform: translate(-50% , calc(-100% - 10px));
+    cursor: default;
+    .tooltip-info{
+      display: flex;
+      width: 100%;
+      background-color: #fff;
+      padding: 15px 20px;
+      padding-left: 25px;
+      border-radius: 10px;
+      box-shadow: 0 10px 15px -10px rgba(0,0,0,0.3);
+      .left-content{
+        .img-content{
+          width: 36px;
+          height: 62px;
+          padding: 0 2px;
+          padding-top: 5px;
+          // background-color: #999;
+          .img{
+            width: 100%;
+            user-select: none;
+          }
+        }
+      }
+      .right-content{
+        flex: 1;
+        padding-left: 20px;
+        .title-content{
+          font-size: 18px;
+          margin-bottom: 5px;
+        }
+        .text-content{
+          font-size: 12px;
+          font-weight: normal;
+        }
+      }
+    }
+    .tooltip-arrow{
+      $tooltip-arrow-size: 8px;
+      width: 30px;
+      height: 20px;
+      position: absolute;
+      bottom: 0;
+      left: 50%;
+      transform: translate(-50% , calc(100% - 1px));
+      // background-color: #159;
+      overflow: hidden;
+      &:after{
+        display: block;
+        content: '';
+        width: $tooltip-arrow-size;
+        height: $tooltip-arrow-size;
+        border-style: solid;
+        border-width: $tooltip-arrow-size;
+        border-color: transparent #fff #fff transparent;
+        position: absolute;
+        top: 0;
+        left: 50%;
+        transform: translate(-50% , -9px) scaleX(0.8) rotate(45deg);
+        box-shadow: 2px  2px 5px 0px rgba(0,0,0, 0.2);
+      }
+      
+    }
+  }
+}

@@ -1,3 +1,4 @@
+@charset "UTF-8";
 @import url(../css/style-reset.css);
 .mt-pc-0 {
   margin-top: 0px; }
@@ -1775,7 +1776,7 @@ body.content-blur .draw-icon {
         .beer-comp-modal .modal .modal-body .beer-form-content {
           padding-bottom: 0; } }
     .beer-comp-modal .modal .modal-body .modal-word-content {
-      max-height: 300px;
+      max-height: 400px;
       overflow-x: hidden;
       overflow-y: auto;
       border: solid 1px #ddd;
@@ -1795,15 +1796,15 @@ body.content-blur .draw-icon {
         .beer-comp-modal .modal .modal-body .modal-word-content {
           padding: 15px; } }
       .beer-comp-modal .modal .modal-body .modal-word-content .modal-word-section + .modal-word-section {
-        padding-top: 35px; }
+        padding-top: 40px; }
         @media screen and (max-width: 480px) {
           .beer-comp-modal .modal .modal-body .modal-word-content .modal-word-section + .modal-word-section {
             padding-top: 20px; } }
       .beer-comp-modal .modal .modal-body .modal-word-content .title-content {
         font-size: 22px;
         font-weight: bold;
-        padding-bottom: 5px;
-        margin-bottom: 12px;
+        padding-bottom: 10px;
+        margin-bottom: 20px;
         color: #333;
         border-bottom: solid 1px #ddd; }
         @media screen and (max-width: 480px) {
@@ -1825,7 +1826,7 @@ body.content-blur .draw-icon {
           color: #000;
           text-decoration: underline; }
         .beer-comp-modal .modal .modal-body .modal-word-content .text-content + .subtitle-content {
-          margin-top: 15px; }
+          margin-top: 20px; }
   .beer-comp-modal .modal .modal-footer {
     padding-bottom: 30px; }
     @media screen and (max-width: 480px) {
@@ -2508,3 +2509,98 @@ body.content-blur .draw-icon {
       .beer-comp-error-content .error-content .error-btn-content .error-small-btn-content .btn-content .link-content {
         font-size: 10px;
         opacity: 0.2; }
+
+.beer-comp-tooltip {
+  margin: 0 3px;
+  display: inline-block;
+  vertical-align: middle;
+  width: 13px;
+  height: 13px;
+  position: relative;
+  border-radius: 50%;
+  border: solid 1px #333;
+  cursor: pointer; }
+  .beer-comp-tooltip:before {
+    display: block;
+    content: '？';
+    font-size: 12px;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    -webkit-transform: translate(-50%, -50%) scale(0.8);
+    -ms-transform: translate(-50%, -50%) scale(0.8);
+    transform: translate(-50%, -50%) scale(0.8); }
+  .beer-comp-tooltip.active .tooltip-content {
+    display: -webkit-box;
+    display: -ms-flexbox;
+    display: flex; }
+  .beer-comp-tooltip .tooltip-content {
+    display: none;
+    width: calc(100vw - 25px);
+    max-width: 350px;
+    position: absolute;
+    left: 50%;
+    top: 0;
+    -webkit-transform: translate(-50%, calc(-100% - 10px));
+    -ms-transform: translate(-50%, calc(-100% - 10px));
+    transform: translate(-50%, calc(-100% - 10px));
+    cursor: default; }
+    .beer-comp-tooltip .tooltip-content .tooltip-info {
+      display: -webkit-box;
+      display: -ms-flexbox;
+      display: flex;
+      width: 100%;
+      background-color: #fff;
+      padding: 15px 20px;
+      padding-left: 25px;
+      border-radius: 10px;
+      -webkit-box-shadow: 0 10px 15px -10px rgba(0, 0, 0, 0.3);
+      box-shadow: 0 10px 15px -10px rgba(0, 0, 0, 0.3); }
+      .beer-comp-tooltip .tooltip-content .tooltip-info .left-content .img-content {
+        width: 36px;
+        height: 62px;
+        padding: 0 2px;
+        padding-top: 5px; }
+        .beer-comp-tooltip .tooltip-content .tooltip-info .left-content .img-content .img {
+          width: 100%;
+          -webkit-user-select: none;
+          -moz-user-select: none;
+          -ms-user-select: none;
+          user-select: none; }
+      .beer-comp-tooltip .tooltip-content .tooltip-info .right-content {
+        -webkit-box-flex: 1;
+        -ms-flex: 1;
+        flex: 1;
+        padding-left: 20px; }
+        .beer-comp-tooltip .tooltip-content .tooltip-info .right-content .title-content {
+          font-size: 18px;
+          margin-bottom: 5px; }
+        .beer-comp-tooltip .tooltip-content .tooltip-info .right-content .text-content {
+          font-size: 12px;
+          font-weight: normal; }
+    .beer-comp-tooltip .tooltip-content .tooltip-arrow {
+      width: 30px;
+      height: 20px;
+      position: absolute;
+      bottom: 0;
+      left: 50%;
+      -webkit-transform: translate(-50%, calc(100% - 1px));
+      -ms-transform: translate(-50%, calc(100% - 1px));
+      transform: translate(-50%, calc(100% - 1px));
+      overflow: hidden; }
+      .beer-comp-tooltip .tooltip-content .tooltip-arrow:after {
+        display: block;
+        content: '';
+        width: 8px;
+        height: 8px;
+        border-style: solid;
+        border-width: 8px;
+        border-color: transparent #fff #fff transparent;
+        position: absolute;
+        top: 0;
+        left: 50%;
+        -webkit-transform: translate(-50%, -9px) scaleX(0.8) rotate(45deg);
+        -ms-transform: translate(-50%, -9px) scaleX(0.8) rotate(45deg);
+        transform: translate(-50%, -9px) scaleX(0.8) rotate(45deg);
+        -webkit-box-shadow: 2px 2px 5px 0px rgba(0, 0, 0, 0.2);
+        box-shadow: 2px 2px 5px 0px rgba(0, 0, 0, 0.2); }

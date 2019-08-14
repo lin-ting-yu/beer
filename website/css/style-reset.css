@@ -16,7 +16,8 @@
   top: 0; }
 
 #stats {
-  position: absolute; }
+  position: absolute;
+  opacity: 0; }
 
 html, body {
   width: 100%;

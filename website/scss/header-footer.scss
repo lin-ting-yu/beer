@@ -37,8 +37,13 @@
 		.header-logo{
 			width: 90px;
 			height: 90px;
-			border: solid 1px #000;
+			// border: solid 1px #000;
 			border-radius: 50%;
+			opacity: 0.7;
+			transition: opacity 0.3s;
+			&:hover{
+				opacity: 1;
+			}
 			@media screen and (max-width: $screen-pad-l-size) {
 				width: 70px;
 				height: 70px;
@@ -208,9 +213,9 @@
 		min-height: 50vh;
 		@media screen and (max-width: $screen-pad-l-size) {
 			right: $header-padding-l-r-mobile;
-			width: calc(100% - #{$header-padding-l-r-mobile});
 		}
 		@media screen and (max-width: $screen-pad-s-size){
+			width: calc(100% - #{$header-padding-l-r-mobile});
 			bottom: $header-step-bottom;
 			min-height: 0;
 			text-align: right;
@@ -389,7 +394,7 @@
 			display: none;
 		}
 		&.hide{
-		  // opacity: 0;
+		  opacity: 0;
 		}
 		.draw-circle{
 		  width: 32px;

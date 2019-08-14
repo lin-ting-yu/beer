@@ -120,7 +120,7 @@
 					}
 				}
 				.modal-word-content{
-					max-height: 300px;
+					max-height: 400px;
 					overflow-x: hidden;
 					overflow-y: auto;
 					border: solid 1px #ddd;
@@ -145,7 +145,7 @@
 					}
 					.modal-word-section{
 						& + .modal-word-section{
-							padding-top: 35px;
+							padding-top: 40px;
 							@media screen and (max-width: $screen-mobile-size){
 								padding-top: 20px;
 							}
@@ -154,8 +154,8 @@
 					.title-content{
 						font-size: 22px;
 						font-weight: bold;
-						padding-bottom: 5px;
-						margin-bottom: 12px;
+						padding-bottom: 10px;
+						margin-bottom: 20px;
 						color: #333;
 						border-bottom: solid 1px #ddd;
 						@media screen and (max-width: $screen-mobile-size){
@@ -181,7 +181,7 @@
 							text-decoration: underline;
 						}
 						&+.subtitle-content{
-							margin-top: 15px;
+							margin-top: 20px;
 						}
 					}
 				}	
