@@ -10,20 +10,67 @@
 
 //===========   bindingEvent function     ===========//
 function ajaxEvent(){
-    $.ajax({
-        url: './JSON/beer-data.json',// url位置
-        type: 'get',                   // post/get
-        dataType: "text",
-        error: function (xhr) {
-            console.log(xhr);
-        },// 錯誤後執行的函數
-        success: function (response) {
-            window.beerData = $.parseJSON(response);
-            $loadingHandle.keyDom = $($loadingHandle.key);
-            $loadingHandle.setSetp(0.25);
-            loadingObj(beerData, bindingEvent);
-        }// 成功後要執行的函數
+    detectWebGLContext({
+        supported:()=>{
+            $.ajax({
+                url: './JSON/beer-data.json',// url位置
+                type: 'get',                   // post/get
+                dataType: "text",
+                error: function (xhr) {
+                    console.log(xhr);
+                },// 錯誤後執行的函數
+                success: function (response) {
+                    function run(){
+                        window.beerData = $.parseJSON(response);
+                        $loadingHandle.keyDom = $($loadingHandle.key);
+                        $loadingHandle.setSetp(0.25);
+                        loadingObj(beerData, bindingEvent);
+                    }
+
+                    detectIE({
+                        isIE: (version)=>{
+                            getInclude(
+                                './include/include-error-ie.html',
+                                (response)=>{
+                                    let IeDOM = $(response);
+                                    let year = new Date().getFullYear();
+                                    IeDOM
+                                        .find('.error-text .text')
+                                        .html('No one is using IE in '+year+'<br>It may make you have a bad experience')
+                                    if(version <= 10){
+                                        IeDOM
+                                            .find('.error-small-btn-content')
+                                            .remove();
+                                    }
+                                    else if(version === 11){
+                                        IeDOM
+                                            .find('.error-small-btn-content .link-content')
+                                            .on('click', function(e){
+                                                e.preventDefault();
+                                                IeDOM.remove();
+                                                run();
+                                            });
+                                    }
+                                    $('body').append(IeDOM);
+                                })
+                        },
+                        notIE: ()=>{
+                            run();
+                        }
+                    });
+                }// 成功後要執行的函數
+            });
+        },
+        enabled:()=>{
+            getInclude(
+                './include/include-error-webgl.html',
+                (response)=>{
+                    $('body').html(response);
+                });
+        }
     });
+                    
+        
 } 
 function bindingEvent(){
     var _initial = [$headerHandle,
@@ -1962,6 +2009,64 @@ const $threeHandle = {
             }
         }
         return result;
+    }
+    function detectWebGL(){
+        // Check for the WebGL rendering context
+        if ( !! window.WebGLRenderingContext) {
+            var canvas = document.createElement("canvas"),
+                names = ["webgl", "experimental-webgl", "moz-webgl", "webkit-3d"],
+                context = false;
+            for (var i in names) {
+                try {
+                    context = canvas.getContext(names[i]);
+                    if (context && typeof context.getParameter === "function") {
+                        // WebGL is enabled.
+                        return 1;
+                    }
+                } catch (e) {}
+            }
+            // WebGL is supported, but disabled.
+            return 0;
+        }
+        // WebGL not supported.
+        return -1;
+    };
+    function detectWebGLContext(obj) {
+        let num = detectWebGL();
+        if (num >= 0) {
+            obj.supported();
+        } 
+        else {
+            obj.enabled();
+        }
+    }
+    function detectIE(obj){
+        let ieTest = {
+            '6-10': document.all && document.compatMode,
+            '11': window.navigator.msPointerEnabled
+        }
+        if(ieTest['6-10'] || ieTest['11']){
+            let version = ieTest['6-10']? 10: 11;
+            obj.isIE(version);
+        }
+        else{
+            obj.notIE()
+        }
+    }
+
+    function getInclude(url, success, error){
+        $.ajax({
+            url: url,   // url位置
+            type: 'get',
+            dataType: "text",
+            error: function (xhr) {
+                console.log(xhr);
+                error(xhr)
+            },// 錯誤後執行的函數
+            success: function (response) {
+                success(response)
+            }// 成功後要執行的函數
+        });
     }
 //=============== tool: end ===============//
 

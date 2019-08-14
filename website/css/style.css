@@ -350,7 +350,8 @@
   align-content: stretch;
   width: 100%;
   height: 100%;
-  position: absolute; }
+  position: absolute;
+  overflow: hidden; }
   @media screen and (max-width: 900px) {
     body.isMobile .layout-content {
       height: 100%;
@@ -400,29 +401,30 @@
       position: relative; }
 
 .beer-comp-btn {
-  display: block;
-  width: 100%;
-  -webkit-box-flex: 1;
-  -ms-flex: 1;
-  flex: 1; }
+  width: 100%; }
   .beer-comp-btn .btns-content {
     display: -webkit-box;
     display: -ms-flexbox;
     display: flex;
+    width: 100%;
     -webkit-box-pack: center;
     -ms-flex-pack: center;
-    justify-content: center; }
+    justify-content: center;
+    -ms-flex-line-pack: stretch;
+    align-content: stretch; }
     .beer-comp-btn .btns-content .btn-content {
-      -webkit-box-flex: 1;
-      -ms-flex: 1;
-      flex: 1;
+      width: 100%;
       text-align: center;
       border: solid 1px #333;
       border-radius: 22px;
       max-width: 150px;
       -webkit-transition: 0.5s;
       -o-transition: 0.5s;
-      transition: 0.5s; }
+      transition: 0.5s;
+      margin-left: 0;
+      margin-right: 0; }
+      .beer-comp-btn .btns-content .btn-content.btn-big {
+        max-width: 180px; }
       .beer-comp-btn .btns-content .btn-content:hover {
         -webkit-transform: translateY(-2px);
         -ms-transform: translateY(-2px);
@@ -1650,14 +1652,19 @@ body.content-blur .draw-icon {
   perspective: 500px; }
   .beer-comp-modal .modal::-webkit-scrollbar {
     display: none; }
-  .beer-comp-modal .modal.show .modal-dialog {
-    margin-top: 0;
-    -webkit-transform: rotateY(0deg) rotateX(0deg);
-    transform: rotateY(0deg) rotateX(0deg); }
+  .beer-comp-modal .modal.show {
+    display: -webkit-box !important;
+    display: -ms-flexbox !important;
+    display: flex !important; }
+    .beer-comp-modal .modal.show .modal-dialog {
+      margin-top: 0;
+      -webkit-transform: rotateY(0deg) rotateX(0deg);
+      transform: rotateY(0deg) rotateX(0deg); }
   .beer-comp-modal .modal .modal-dialog {
     display: -webkit-box;
     display: -ms-flexbox;
     display: flex;
+    width: 100%;
     -webkit-box-align: center;
     -ms-flex-align: center;
     align-items: center;
@@ -2399,3 +2406,46 @@ body.content-blur .draw-icon {
           color: #fff;
           font-size: 20px;
           letter-spacing: 1px; }
+
+.beer-comp-error-content {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  -webkit-box-pack: center;
+  -ms-flex-pack: center;
+  justify-content: center;
+  width: 100%;
+  height: 100%;
+  position: fixed;
+  top: 0;
+  right: 0;
+  background-color: #d9d9d9;
+  overflow: hidden;
+  overflow-y: auto;
+  z-index: 4000;
+  padding: 30px 0; }
+  .beer-comp-error-content .error-content {
+    text-align: center;
+    padding: 30px 0; }
+    .beer-comp-error-content .error-content .error-img {
+      width: 300px;
+      margin: auto;
+      margin-bottom: 20px; }
+      .beer-comp-error-content .error-content .error-img .img {
+        width: 100%; }
+    .beer-comp-error-content .error-content .error-text-content {
+      margin-bottom: 35px; }
+      .beer-comp-error-content .error-content .error-text-content .error-title {
+        font-size: 25px;
+        font-weight: bold;
+        margin-bottom: 10px; }
+      .beer-comp-error-content .error-content .error-text-content .error-text {
+        font-size: 14px; }
+    .beer-comp-error-content .error-content .error-btn-content .error-small-btn-content {
+      margin-top: 20px; }
+      .beer-comp-error-content .error-content .error-btn-content .error-small-btn-content .btn-content .link-content {
+        font-size: 10px;
+        opacity: 0.2; }
