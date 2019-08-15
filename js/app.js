@@ -445,9 +445,6 @@ const materialObj = {
         });
     }
 };
-materialObj.textureCube = materialObj._CubeTextureLoader.load( materialObj._glassMaterialData.urls );
-materialObj.textureCube.mapping = THREE.CubeRefractionMapping;
-//還景貼圖
 
 
 //===========
@@ -1790,6 +1787,10 @@ const $threeHandle = {
         }
     },
     initial: function(){
+        //還景貼圖
+        materialObj.textureCube = materialObj._CubeTextureLoader.load( materialObj._glassMaterialData.urls );
+        materialObj.textureCube.mapping = THREE.CubeRefractionMapping;
+        
         this._initWindowActivePosData();
         this._setWindowSizeName();
         this.threeJsControlDataSetting();
