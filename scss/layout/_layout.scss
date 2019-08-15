@@ -33,7 +33,7 @@ body.isMobile {
 		align-items: stretch;
 		align-content: stretch;
 		flex: 1;
-		-webkit-overflow-scrolling: touch;
+		// -webkit-overflow-scrolling: touch;
 		// border: solid 1px;
 		@media screen and (max-width: $screen-pad-l-size) {
 			padding: 0 30px;
