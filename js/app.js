@@ -24,6 +24,8 @@ function ajaxEvent(){
                         window.beerData = $.parseJSON(response);
                         $loadingHandle.keyDom = $($loadingHandle.key);
                         $loadingHandle.setSetp(0.25);
+
+                        // $loadingHandle.final();
                         loadingObj(beerData, bindingEvent);
                     }
 
@@ -69,8 +71,6 @@ function ajaxEvent(){
                 });
         }
     });
-                    
-        
 } 
 function bindingEvent(){
     var _initial = [$headerHandle,
@@ -267,7 +267,7 @@ function bindingEvent(){
         });
     });
     //body click動作
-    windowJquery.on('click',function(){
+    $('body').on('click',function(){
         eachEvent(_onClick, 'onClick', 'isClick', 50);
     });
 }
@@ -403,9 +403,9 @@ const beerThreeData = [];
 //設定材質
 const materialObj = {
     _glassMaterialData:{
-        urls: [ "./img/white-room/px.jpg", "./img/white-room/nx.jpg",
-                "./img/white-room/py.jpg", "./img/white-room/ny.jpg",
-                "./img/white-room/pz.jpg", "./img/white-room/nz.jpg"]
+        urls: [ "img/white-room/px.jpg", "img/white-room/nx.jpg",
+                "img/white-room/py.jpg", "img/white-room/ny.jpg",
+                "img/white-room/pz.jpg", "img/white-room/nz.jpg"]
     },
     textureCube: null,
     _textureLoader: new THREE.TextureLoader(),
@@ -445,8 +445,11 @@ const materialObj = {
         });
     }
 };
-
-
+//還景貼圖
+materialObj.textureCube = new THREE.CubeTextureLoader().load( materialObj._glassMaterialData.urls );
+materialObj.textureCube.mapping = THREE.CubeRefractionMapping;
+        
+// materialObj.textureCube.format = THREE.RGBFormat;
 //===========
 const $tooltipHandle = {
     key:'.beer-comp-tooltip',
@@ -476,7 +479,7 @@ const $tooltipHandle = {
     bindingEvent: function(jsDOM){
         let self = this;
         let thisJsDOM = $(jsDOM);
-        thisJsDOM.on('click', function(e){
+        thisJsDOM.on('mousedown tauchstart', function(e){
             self.closeAll();
             e.stopPropagation();
             e.preventDefault();
@@ -501,12 +504,12 @@ const $tooltipHandle = {
         let infoContentPos = infoContentJs.getBoundingClientRect();
         let arrow = DOM.find('.tooltip-arrow');
         arrow.css('margin-left','');
-        if(infoContentPos.left < 20){
-            let margin = 20 - infoContentPos.left;
+        if(infoContentPos.left < 15){
+            let margin = 15 - infoContentPos.left;
             infoContent.css('margin-left', margin + 'px');
             arrow.css('margin-left', -margin + 'px');
         }
-        else if(infoContentPos.right - $windowData.width > 20){
+        else if(infoContentPos.right - $windowData.width > 15){
             let margin = infoContentPos.right - $windowData.width;
             infoContent.css('margin-left', -margin + 'px');
             arrow.css('margin-left', margin + 'px');
@@ -520,13 +523,24 @@ const $tooltipHandle = {
             });
         }
     },
-    onClick: function(){
+    onMouseDown: function(){
         this.closeAll();
+    },
+    onClick: function(){
+        // this.closeAll();
     },
     initial: function(){
         let self = this;
         this.keyDom.each((_, DOM)=>{
             self.bindingEvent(DOM);
+            $(DOM)
+                .on('mouseenter',function(e){
+                    $drawIconHandle.setTrackDOM(DOM);
+                    $drawIconHandle.setToUnderlindPos();
+                })
+                .on('mouseleave',function(e){
+                    $drawIconHandle.removeUnderlindPos();
+                });
         });
     }
 }
@@ -1787,10 +1801,6 @@ const $threeHandle = {
         }
     },
     initial: function(){
-        //還景貼圖
-        materialObj.textureCube = materialObj._CubeTextureLoader.load( materialObj._glassMaterialData.urls );
-        materialObj.textureCube.mapping = THREE.CubeRefractionMapping;
-        
         this._initWindowActivePosData();
         this._setWindowSizeName();
         this.threeJsControlDataSetting();
@@ -2102,6 +2112,7 @@ const $threeHandle = {
         }
         rr() {
             this.renderer = new THREE.WebGLRenderer();
+            this.renderer.setPixelRatio( window.devicePixelRatio );
             this.renderer.setSize(this.width, this.height);
             this.renderer.setClearColor(0xff2244, 1.0); // 預設背景顏色
             this.renderer.shadowMap.enable = true; // 陰影效果

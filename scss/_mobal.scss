@@ -141,6 +141,7 @@
 					    background: #999;
 					}
 					@media screen and (max-width: $screen-mobile-size){
+						max-height: 300px;
 						padding: 15px;
 					}
 					.modal-word-section{

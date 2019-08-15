@@ -1125,7 +1125,7 @@
       body.isMobile .content-section.section-2 {
         opacity: 0; }
       body.isMobile .content-section.section-3 {
-        min-height: 60%; } }
+        min-height: 50%; } }
   .content-section.show {
     opacity: 1 !important; }
   .content-section.no-event, .content-section .no-event {
@@ -1229,6 +1229,9 @@
   -webkit-transform: rotate(90deg);
   -ms-transform: rotate(90deg);
   transform: rotate(90deg); }
+  @media screen and (max-width: 480px) {
+    .index-section .plus {
+      display: none; } }
 
 .index-section .section-title {
   width: 100%;
@@ -1617,15 +1620,23 @@
           .beer-comp-item-list-1 .item-list-1-content .item-list-1-ul .item-list-1-li .list-content-text .chart-list .chart-ul .chart-li:after {
             display: block;
             height: 100%;
+            width: 100%;
             content: '';
-            background-color: #333;
+            border-radius: 50%;
+            background-color: transparent;
             position: absolute;
             top: 0;
             left: 0; }
           .beer-comp-item-list-1 .item-list-1-content .item-list-1-ul .item-list-1-li .list-content-text .chart-list .chart-ul .chart-li.whole:after {
-            width: 100%; }
+            background-color: #333; }
           .beer-comp-item-list-1 .item-list-1-content .item-list-1-ul .item-list-1-li .list-content-text .chart-list .chart-ul .chart-li.half:after {
-            width: 55%; }
+            background: -webkit-gradient(linear, left bottom, left top, color-stop(55%, #333), color-stop(55%, transparent));
+            background: -webkit-linear-gradient(bottom, #333 55%, transparent 55%);
+            background: -o-linear-gradient(bottom, #333 55%, transparent 55%);
+            background: linear-gradient(0deg, #333 55%, transparent 55%);
+            background: -moz-linear-gradient(0deg, #333 55%, transparent 55%);
+            background: -webkit-linear-gradient(0deg, #333 55%, transparent 55%);
+            background: -o-linear-gradient(0deg, #333 55%, transparent 55%); }
 
 body.content-blur .layout-content, body.content-blur .three-canvas {
   -webkit-filter: blur(20px);
@@ -1794,6 +1805,7 @@ body.content-blur .draw-icon {
         background: #999; }
       @media screen and (max-width: 480px) {
         .beer-comp-modal .modal .modal-body .modal-word-content {
+          max-height: 300px;
           padding: 15px; } }
       .beer-comp-modal .modal .modal-body .modal-word-content .modal-word-section + .modal-word-section {
         padding-top: 40px; }
@@ -1965,19 +1977,19 @@ body.content-blur .draw-icon {
     -webkit-box-align: center;
     -ms-flex-align: center;
     align-items: center;
-    width: 100vw;
-    height: 100vh;
+    width: 100%;
+    height: 100%;
     position: absolute;
     right: 0;
     top: 0; }
     .beer-comp-loading .loading-content .icon-content {
-      width: 50px;
-      height: 130px;
+      width: 40px;
+      height: 104px;
       position: relative;
       margin: auto;
       margin-bottom: 40px; }
       .beer-comp-loading .loading-content .icon-content .bottle {
-        width: 50px;
+        width: 40px;
         position: absolute;
         top: 0;
         left: 50%;
@@ -2004,7 +2016,7 @@ body.content-blur .draw-icon {
           width: 100%;
           position: relative; }
       .beer-comp-loading .loading-content .icon-content .cover {
-        width: 27px;
+        width: 19px;
         position: absolute;
         top: 0;
         left: 50%;
@@ -2022,6 +2034,9 @@ body.content-blur .draw-icon {
       margin: auto;
       background-color: rgba(255, 255, 255, 0.3);
       border-radius: 2px; }
+      @media screen and (max-width: 480px) {
+        .beer-comp-loading .loading-content .bar {
+          width: 200px; } }
       .beer-comp-loading .loading-content .bar .bar-step {
         width: 0;
         height: 100%;
@@ -2536,7 +2551,7 @@ body.content-blur .draw-icon {
     display: flex; }
   .beer-comp-tooltip .tooltip-content {
     display: none;
-    width: calc(100vw - 25px);
+    width: calc(100vw - 30px);
     max-width: 350px;
     position: absolute;
     left: 50%;
