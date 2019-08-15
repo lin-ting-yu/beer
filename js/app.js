@@ -204,8 +204,8 @@ function bindingEvent(){
             eventData.isWheel = false;
             _whellFn = false;
         },200);
-        
     });
+    //scroll動作
     windowJquery.on('scroll',function(e){
         eachEvent(_onScroll, 'onScroll', 'isScroll', 50);
     });
@@ -1876,11 +1876,11 @@ const $threeHandle = {
         // }
         if(typeof $windowData.gyro.beta === 'number'){
             this.setGyroBase(
-                Math.abs($windowData.gyro.beta - threeJsControlData.gyroBase.beta) / 6 > 20,
-                Math.abs($windowData.gyro.gamma - threeJsControlData.gyroBase.gamma) / 6 > 15);
+                Math.abs($windowData.gyro.beta - threeJsControlData.gyroBase.beta) / 6 > 10,
+                Math.abs($windowData.gyro.gamma - threeJsControlData.gyroBase.gamma) / 6 > 10);
 
             threeJsControlData.moveX =  -32 - ($windowData.gyro.gamma - threeJsControlData.gyroBase.gamma) / 6;
-            threeJsControlData.moveY =   3 - ($windowData.gyro.beta  - threeJsControlData.gyroBase.beta) / 6;
+            threeJsControlData.moveY =   0 - ($windowData.gyro.beta  - threeJsControlData.gyroBase.beta) / 6;
 
         }
         

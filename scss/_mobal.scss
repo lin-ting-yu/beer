@@ -21,6 +21,9 @@
 
 //beer-comp-modal
 	.beer-comp-modal{
+		*{
+			-webkit-overflow-scrolling: touch;
+		}
 		.modal{
 			transform-style: preserve-3d;
 			perspective: 500px;
