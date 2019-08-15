@@ -93,7 +93,8 @@ function bindingEvent(){
         _onMouseUp   = [],
         _onClick     = [],
         _onWheel     = [],
-        _onRotate    = [];
+        _onRotate    = [],
+        _onGyro      = [];
     let _whellLength = 0,
         _whellFn = false;
     //判斷手機為body新增class
@@ -145,6 +146,10 @@ function bindingEvent(){
         if(o.hasOwnProperty('onRotate')){
             _onRotate.push(o);
         }
+        //判斷此物件是否有要onGyro的function
+        if(o.hasOwnProperty('onGyro')){
+            _onGyro.push(o);
+        }
     });
     //each動作
     function eachEvent(eventArray, eventName, booleanName, time, data, beforeFn){
@@ -164,6 +169,7 @@ function bindingEvent(){
     //Resize動作
     windowJquery.resize(function(){
         eachEvent(_onResize, 'onResize', 'isResize', 200, null,()=>{
+            $windowData.oldWidth = $windowData.width;
             $windowData.width = windowJquery.outerWidth();
             $windowData.oldInHeight = $windowData.inHeight;
             $windowData.inHeight = window.innerHeight;
@@ -270,6 +276,15 @@ function bindingEvent(){
     $('body').on('click',function(){
         eachEvent(_onClick, 'onClick', 'isClick', 50);
     });
+    if(isMobile){
+        window.addEventListener('deviceorientation', function(event) {
+            eachEvent(_onGyro, 'onGyro', 'isGyro', 50, event,()=>{
+                $windowData.gyro.alpha = event.alpha;
+                $windowData.gyro.beta  = event.beta;
+                $windowData.gyro.gamma = event.gamma;
+            });  
+        }, false);
+    }
 }
 
 //===========   bindingEvent function: end ===========//
@@ -284,8 +299,10 @@ var eventData = {
     isMouseDown: false,
     isMouseUp: false,
     isMouseMove: false,
+    isGyro: false
 };
 var $windowData = { width:     windowJquery.outerWidth(),
+                    oldWidth:  windowJquery.outerWidth(),
                     inHeight:    window.innerHeight,
                     oldInHeight: window.innerHeight,
                     aspectRatio: {
@@ -296,7 +313,12 @@ var $windowData = { width:     windowJquery.outerWidth(),
                     mouseX: 0,
                     mouseY: 0,
                     mouseDownPos:{x: null, y: null},
-                    mouseDownMoveLength:{x: null, y: null}
+                    mouseDownMoveLength:{x: null, y: null},
+                    gyro:{
+                        alpha: null,
+                        beta:  null,
+                        gamma: null
+                    }
                 };
 $windowData.aspectRatio.now = $windowData.aspectRatio.old = $windowData.inHeight / $windowData.width;
 let isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry/i.test(navigator.userAgent);
@@ -306,12 +328,18 @@ let beer;
 
 
 const threeJsControlData = {
-    mouseX: -30,
+    gyroBase:{
+        alpha: null,
+        beta:  null,
+        gamma: null
+    },
+    moveX: -30,
     mouseXPercen: 15 / $windowData.width,
-    mouseY: 0,
+    moveY: 0,
     mouseYPercen: 15 / $windowData.inHeight,
     windowHalfX: window.innerWidth / 2,
     windowHalfY: window.innerHeight / 2,
+    speed: 0.01,
     trun: 1,
     activeIndex: 0,
     oldActiveIndex: 0,
@@ -339,7 +367,7 @@ const threeJsControlData = {
         'smaller480':
                     {   scale:      0.8,
                         position:{  x: 20,
-                                    y: 10,
+                                    y: 13,
                                     z: 18},
                         rotation:{  y: Math.PI + 1}
                     },
@@ -378,7 +406,7 @@ const threeJsControlData = {
         'smaller480':{
             activePosSection1: {    scale:      0.7,
                                     position:{  x: 0,
-                                                y: 5},
+                                                y: 7},
                                     rotation:{  z: 0.5},
                                     itemGap:    30 },
             activePosSection2: {    scale:      1.2,
@@ -388,7 +416,7 @@ const threeJsControlData = {
                                     itemGap:    50 },
             activePosSection3: {    scale:      0.5,
                                     position:{  x: -10,
-                                                y: 2},
+                                                y: 5},
                                     rotation:{  z: 0.5},
                                     itemGap:    20 }
         }
@@ -732,7 +760,9 @@ const $contactHandle = {
         let self = this;
         this.Button.on('click',function(e){
             e.preventDefault();
-            self.submitAn();
+            if(!self.isSand){
+                self.submitAn();
+            }
         });
         this.keyDom.on('hidden.bs.modal',()=>{
             this.submitAnReset();
@@ -1648,6 +1678,7 @@ const $threeHandle = {
     carousel: null,
     windowSizeName: 'larger900',
     oldWindowSizeName: '',
+
     _initWindowActivePosData: function(){
         for(let windowName in threeJsControlData.windowActivePosData){
             let thisWindowName = threeJsControlData.windowActivePosData[windowName];
@@ -1703,9 +1734,9 @@ const $threeHandle = {
         requestAnimationFrame($threeHandle._threeJsRender);
         TWEEN.update();
         if(!threeJsControlData.transformXing){
-            beer.camera.position.x += (threeJsControlData.mouseX - beer.camera.position.x) * 0.01;
+            beer.camera.position.x += (threeJsControlData.moveX - beer.camera.position.x) * threeJsControlData.speed;
         }
-        beer.camera.position.y += (-threeJsControlData.mouseY - beer.camera.position.y) * 0.01;
+        beer.camera.position.y += (-threeJsControlData.moveY - beer.camera.position.y) * threeJsControlData.speed;
         beer.camera.lookAt(beer.scene.position);
         beer.renderer.render(beer.scene, beer.camera);
     },
@@ -1797,13 +1828,26 @@ const $threeHandle = {
                 item.transform('rotation','y', foodChangePos.rotation.y, 'food');
                 item.transform('scale', 'set', foodChangePos.scale, 'food');
             });
-            if(isMobile){
+            if( isMobile &&
+               ($windowData.oldWidth >  900 && $windowData.width <= 900 || 
+                $windowData.oldWidth <= 900 && $windowData.width >  900)){
                 $sectionHandle.setInnerActivePos();
                 $sectionHandle.resetSettion();
             }
         }
     },
+    setGyroBase: function(beta, gamma){
+        if(threeJsControlData.gyroBase.beta === null || beta){
+            threeJsControlData.gyroBase.beta = $windowData.gyro.beta;
+        }
+        if(threeJsControlData.gyroBase.gamma === null || gamma){
+            threeJsControlData.gyroBase.gamma = $windowData.gyro.gamma;
+        }
+    },
     initial: function(){
+        if(isMobile){
+            threeJsControlData.speed = 0.8;
+        }
         this._initWindowActivePosData();
         this._setWindowSizeName();
         this.threeJsControlDataSetting();
@@ -1820,9 +1864,27 @@ const $threeHandle = {
         if(!isMobile){
             let mouseX = e.clientX * threeJsControlData.mouseXPercen;
             let mouseY = e.clientY * threeJsControlData.mouseYPercen;
-            threeJsControlData.mouseX =  -25 - mouseX;
-            threeJsControlData.mouseY =  10 - mouseY;
+            threeJsControlData.moveX =  -25 - mouseX;
+            threeJsControlData.moveY =  10 - mouseY;
         }       
+    },
+    onGyro: function(){
+        // gyro:{
+        //     alpha: null,
+        //     beta:  null,
+        //     gamma: null
+        // }
+        if(typeof $windowData.gyro.beta === 'number'){
+            this.setGyroBase(
+                Math.abs($windowData.gyro.beta - threeJsControlData.gyroBase.beta) / 6 > 20,
+                Math.abs($windowData.gyro.gamma - threeJsControlData.gyroBase.gamma) / 6 > 15);
+
+            threeJsControlData.moveX =  -32 - ($windowData.gyro.gamma - threeJsControlData.gyroBase.gamma) / 6;
+            threeJsControlData.moveY =   3 - ($windowData.gyro.beta  - threeJsControlData.gyroBase.beta) / 6;
+
+        }
+        
+
     },
     onResize: function(){
         beer.resize($windowData.width, $windowData.inHeight);
