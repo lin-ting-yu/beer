@@ -1414,6 +1414,9 @@ const $sectionHandle = {
                         self.itemChangeData.next = null;
                         threeJsControlData.oldActiveIndex = threeJsControlData.activeIndex;
                         self.itemMoving = false;
+                        if(bool){
+                            self.itemChangeData.activeBeer.transform('position','x',100);
+                        }
                     })
                     .start();
             $threeHandle.carousel
