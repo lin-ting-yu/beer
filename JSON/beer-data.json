@@ -6,7 +6,7 @@
     "children": {
       "bottle": {
         "material": "glassMaterial",
-        "objSmooth": 3,
+        "objSmooth": 2,
         "maps": {
           "map": "./obj/Piraat/Piraat-map-2.png"
         }
@@ -120,7 +120,7 @@
     "children": {
       "bottle": {
         "material": "glassMaterial",
-        "objSmooth": 3,
+        "objSmooth": 2,
         "maps": {
           "map": "./obj/Corona/Corona-map.png"
         }
