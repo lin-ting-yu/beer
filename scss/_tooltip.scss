@@ -34,7 +34,7 @@
     position: absolute;
     left: 50%;
     top: 0;
-    transform: translate(-50% , calc(-100% - 10px));
+    transform: translateX(-50%)  translateY(-100%) translateY(-10px);
     cursor: default;
     .tooltip-info{
       display: flex;
@@ -77,7 +77,7 @@
       position: absolute;
       bottom: 0;
       left: 50%;
-      transform: translate(-50% , calc(100% - 1px));
+      transform: translateX(-50%) translateY(100%) translateY(-1px);
       // background-color: #159;
       overflow: hidden;
       &:after{

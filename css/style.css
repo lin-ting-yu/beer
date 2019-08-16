@@ -2514,16 +2514,30 @@ body.content-blur .draw-icon {
       width: 300px;
       margin: auto;
       margin-bottom: 20px; }
+      @media screen and (max-width: 480px) {
+        .beer-comp-error-content .error-content .error-img {
+          width: 200px;
+          margin-bottom: 10px; } }
       .beer-comp-error-content .error-content .error-img .img {
         width: 100%; }
     .beer-comp-error-content .error-content .error-text-content {
       margin-bottom: 35px; }
+      @media screen and (max-width: 480px) {
+        .beer-comp-error-content .error-content .error-text-content {
+          margin-bottom: 20px; } }
       .beer-comp-error-content .error-content .error-text-content .error-title {
         font-size: 25px;
         font-weight: bold;
         margin-bottom: 10px; }
+        @media screen and (max-width: 480px) {
+          .beer-comp-error-content .error-content .error-text-content .error-title {
+            font-size: 20px;
+            margin-bottom: 5px; } }
       .beer-comp-error-content .error-content .error-text-content .error-text {
         font-size: 14px; }
+        @media screen and (max-width: 480px) {
+          .beer-comp-error-content .error-content .error-text-content .error-text {
+            width: 250px; } }
     .beer-comp-error-content .error-content .error-btn-content .error-small-btn-content {
       margin-top: 20px; }
       .beer-comp-error-content .error-content .error-btn-content .error-small-btn-content .btn-content .link-content {
@@ -2561,9 +2575,9 @@ body.content-blur .draw-icon {
     position: absolute;
     left: 50%;
     top: 0;
-    -webkit-transform: translate(-50%, calc(-100% - 10px));
-    -ms-transform: translate(-50%, calc(-100% - 10px));
-    transform: translate(-50%, calc(-100% - 10px));
+    -webkit-transform: translateX(-50%) translateY(-100%) translateY(-10px);
+    -ms-transform: translateX(-50%) translateY(-100%) translateY(-10px);
+    transform: translateX(-50%) translateY(-100%) translateY(-10px);
     cursor: default; }
     .beer-comp-tooltip .tooltip-content .tooltip-info {
       display: -webkit-box;
@@ -2604,9 +2618,9 @@ body.content-blur .draw-icon {
       position: absolute;
       bottom: 0;
       left: 50%;
-      -webkit-transform: translate(-50%, calc(100% - 1px));
-      -ms-transform: translate(-50%, calc(100% - 1px));
-      transform: translate(-50%, calc(100% - 1px));
+      -webkit-transform: translateX(-50%) translateY(100%) translateY(-1px);
+      -ms-transform: translateX(-50%) translateY(100%) translateY(-1px);
+      transform: translateX(-50%) translateY(100%) translateY(-1px);
       overflow: hidden; }
       .beer-comp-tooltip .tooltip-content .tooltip-arrow:after {
         display: block;

@@ -19,19 +19,33 @@
             width: 300px;
             margin: auto;
             margin-bottom: 20px;
+            @media screen and (max-width: $screen-mobile-size){
+                width: 200px;
+                margin-bottom: 10px;
+            }
             .img{
                 width: 100%;
             }
         }
         .error-text-content{
             margin-bottom: 35px;
+            @media screen and (max-width: $screen-mobile-size){
+                margin-bottom: 20px;
+            }
             .error-title{
                 font-size: 25px;
                 font-weight: bold;
                 margin-bottom: 10px;
+                @media screen and (max-width: $screen-mobile-size){
+                    font-size: 20px;
+                    margin-bottom: 5px;
+                }
             }
             .error-text{
                 font-size: 14px;
+                @media screen and (max-width: $screen-mobile-size){
+                    width: 250px;
+                }
             }
         }
         .error-btn-content{ 
@@ -47,6 +61,7 @@
             }
             .error-small-btn-content{
                 margin-top: 20px;
+                
                 .btn-content{
                     .link-content{
                         font-size: 10px;
