@@ -1217,7 +1217,11 @@
 
 @media screen and (max-width: 900px) {
   body.isMobile .index-section {
-    height: 100%; } }
+    height: calc(100% - 60px); } }
+
+@media screen and (max-width: 480px) {
+  body.isMobile .index-section {
+    height: calc(100% - 70px); } }
 
 .index-section .plus {
   position: absolute;
@@ -1271,13 +1275,13 @@
   position: relative; }
   @media screen and (max-width: 900px) {
     .index-section .section-subtitle {
-      margin-bottom: 60px; } }
+      margin-bottom: 0px; } }
   @media screen and (max-width: 480px) {
     .index-section .section-subtitle {
       letter-spacing: 1px;
       font-weight: normal;
       font-size: 12px;
-      margin-bottom: 70px; } }
+      margin-bottom: 0px; } }
 
 .index-section .section-content-text {
   font-size: 14px;

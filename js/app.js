@@ -1401,7 +1401,7 @@ const $sectionHandle = {
 
             }
             $headerHandle.beerSection();
-            console.log('4 changeSection fn' + num);
+            // console.log('4 changeSection fn' + num);
         }
     },
     resetSettion: function(){
@@ -1596,7 +1596,7 @@ const $sectionHandle = {
         let nextSection = this.handleSectionChangeEvent(type);
         if(isMobile){
             if(typeof nextSection === 'number'){
-                console.log('onDraw','this.changeSection(nextSection);');
+                // console.log('onDraw','this.changeSection(nextSection);');
                 this.changeSection(nextSection);
             }
         }
@@ -1619,14 +1619,15 @@ const $sectionHandle = {
         if(isMobile){ return; }
         let next = this.handleSectionChangeEvent(type);
         if(typeof next === 'number'){
-            console.log('onWheel','this.changeSection(next);');
+            // console.log('onWheel','this.changeSection(next);');
             this.changeSection(next);
         }
     },
     onScrollEvent: function(boolFn){
         let active = null;
         this.keyDom.each((i, o)=>{
-            if(i === self.sectionActive){
+            // console.log(this.sectionActive);
+            if(i === this.sectionActive){
                 return;
             }
             if (boolFn(i, o)){
@@ -1634,7 +1635,7 @@ const $sectionHandle = {
             }
         });
         if(active !== null){
-            console.log('this.changeSection(active);');
+            // console.log('this.changeSection(active);');
             this.changeSection(active);
         }
     },
@@ -1642,19 +1643,28 @@ const $sectionHandle = {
         if(!isMobileContent){ return; }
         let self = this;
         let rangeHeight = $windowData.inHeight * 0.7;
-        let num = 3;
+        // let num = 3;
         let inScroll = scroll.scrollData;
+        let direction = inScroll.direction;
         // console.log(inScroll);
-        if(inScroll.direction > 0){
+        //往下滑
+        if(direction > 0){
+            if(self.sectionActive === 0 && inScroll.scrollTop > 50){
+                
+            }
             this.onScrollEvent((i, o)=>{
                 let sectionPos = o.getBoundingClientRect();
-                return sectionPos.top <= rangeHeight;
+                return  sectionPos.top <= rangeHeight && 
+                        i > self.sectionActive;
             });
         }
+        //往上滑
         else{
             this.onScrollEvent((i, o)=>{
                 let sectionPos = o.getBoundingClientRect();
-                return sectionPos.bottom >= rangeHeight && sectionPos.bottom < $windowData.inHeight;
+                return  sectionPos.bottom >= rangeHeight && 
+                        sectionPos.bottom < $windowData.inHeight &&
+                        i < self.sectionActive;
             });
         }
     },

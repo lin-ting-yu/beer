@@ -12,6 +12,7 @@
     left: 50%;
     transform: translate(-50% , -50%);
     opacity: 0;
+    // border: solid 1px #000;
     @media screen and (max-width: $screen-mobile-size){
       padding: 0;
     }
@@ -153,7 +154,10 @@
   .index-section{
     body.isMobile &{
       @media screen and (max-width: $screen-pad-s-size){
-        height: 100%;
+        height: calc(100% - 60px);
+      }
+      @media screen and (max-width: $screen-mobile-size){
+        height: calc(100% - 70px);
       }
     }
     .plus{
@@ -204,13 +208,13 @@
       line-height: 1.8em;
       position: relative;
       @media screen and (max-width: $screen-pad-s-size){
-        margin-bottom: 60px;
+        margin-bottom: 0px;
       }
       @media screen and (max-width: $screen-mobile-size){
         letter-spacing: 1px;
         font-weight: normal;
         font-size: 12px;
-        margin-bottom: 70px;
+        margin-bottom: 0px;
       }
     }
     .section-content-text{
